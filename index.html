@@ -111,12 +111,12 @@
                 </h4>
                 <div class="calc-card__rows">
                   <div class="row"><span>Inversión en Pauta</span><span data-out="inv1">$1,000.00</span></div>
-                  <div class="row"><span>ISD (5%)</span><span data-out="isd1">$50.00</span></div>
-                  <div class="row"><span>IVA (15%)<small>(No recuperable)</small></span><span data-out="iva1">$157.50</span></div>
+                  <div class="row"><span>ISD (<span data-rate="ISD">5%</span>)</span><span data-out="isd1">$50.00</span></div>
+                  <div class="row"><span>IVA (<span data-rate="IVA">15%</span>)<small>(No recuperable)</small></span><span data-out="iva1">$157.50</span></div>
                   <hr class="row-sep" />
                   <div class="row"><span>Costo Visible</span><span data-out="visible1">$1,207.50</span></div>
                   <div class="callout callout--bad">
-                    <div class="callout__row"><span>Gasto No Deducible (25%)</span><span data-out="nodeduc1">$301.88</span></div>
+                    <div class="callout__row"><span>Gasto No Deducible (<span data-rate="NON_DEDUCTIBLE">25%</span>)</span><span data-out="nodeduc1">$301.88</span></div>
                     <p>Multa oculta del 25% sobre el gasto total</p>
                   </div>
                 </div>
@@ -136,11 +136,11 @@
                 </h4>
                 <div class="calc-card__rows">
                   <div class="row"><span>Inversión en Pauta</span><span data-out="inv2">$1,000.00</span></div>
-                  <div class="row"><span>ISD (5%)</span><span data-out="isd2">$50.00</span></div>
-                  <div class="row row--accent"><span>Comisión AND (10%)</span><span data-out="fee2">$100.00</span></div>
+                  <div class="row"><span>ISD (<span data-rate="ISD">5%</span>)</span><span data-out="isd2">$50.00</span></div>
+                  <div class="row row--accent"><span>Comisión AND (<span data-rate="FEE">10%</span>)</span><span data-out="fee2">$100.00</span></div>
                   <hr class="row-sep row-sep--good" />
                   <div class="row row--center">
-                    <span>IVA (15%)</span>
+                    <span>IVA (<span data-rate="IVA">15%</span>)</span>
                     <span class="row__stack"><b data-out="iva2">$172.50</b><em class="tag">(Crédito Tributario)</em></span>
                   </div>
                   <div class="callout callout--good">
@@ -553,6 +553,7 @@
     </div>
   </div>
 
+  <script src="js/store.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

@@ -45,7 +45,20 @@
         Ahorro anual   = ahorro * 12
         Meses gratis   = ahorro anual / total informal
      ------------------------------------------------------------------ */
-  const RATES = { ISD: 0.05, IVA: 0.15, FEE: 0.10, NON_DEDUCTIBLE: 0.25 };
+  // Las tasas se leen de la configuración del panel administrador (js/store.js).
+  // Si el panel cambia ISD/IVA/comisión, la calculadora usa los nuevos valores.
+  function getRates() {
+    const s = (window.ANDStore && window.ANDStore.getSettings()) || { isd: 0.05, iva: 0.15, fee: 0.10, nonDeductible: 0.25 };
+    return { ISD: s.isd, IVA: s.iva, FEE: s.fee, NON_DEDUCTIBLE: s.nonDeductible };
+  }
+  let RATES = getRates();
+  function updateRateLabels() {
+    const pct = function (v) { return (v * 100).toFixed(v * 100 % 1 === 0 ? 0 : 1) + "%"; };
+    document.querySelectorAll("[data-rate]").forEach(function (el) { el.textContent = pct(RATES[el.dataset.rate]); });
+  }
+  window.addEventListener("storage", function (e) {
+    if (e.key === "and_settings") { RATES = getRates(); updateRateLabels(); render(sanitize(investInput.value)); }
+  });
 
   const investInput = document.getElementById("investInput");
   const investRange = document.getElementById("investRange");
@@ -115,6 +128,7 @@
     investInput.value = investRange.value;
     render(sanitize(investRange.value));
   });
+  updateRateLabels();
   render(sanitize(investInput.value));
 
   /* ------------------------------------------------------------------
@@ -154,8 +168,9 @@
       submittedAt: new Date().toISOString()
     };
 
+    // Se guarda en la capa de datos compartida → aparece en el panel administrador (Leads).
     // Punto de integración: reemplazar por fetch() a tu backend / CRM.
-    console.log("Lead capturado:", data);
+    if (window.ANDStore) window.ANDStore.addLead(data);
 
     submitBtn.disabled = true;
     submitBtn.textContent = "Enviando…";
@@ -310,20 +325,22 @@
       ruc: document.getElementById("rRuc").value.trim(),
       phone: document.getElementById("rPhone").value.trim(),
       city: document.getElementById("rCity").value.trim(),
-      createdAt: new Date().toISOString()
+      password: pass.value
     };
-    // Punto de integración: enviar `data` (+ contraseña) a tu backend de registro.
-    console.log("Registro corporativo:", data);
+    // Se guarda en la capa de datos compartida → aparece en el panel administrador (Empresas, pendiente de aprobación).
+    // Punto de integración: enviar `data` a tu backend de registro.
+    const result = window.ANDStore ? window.ANDStore.addCompany(data) : {};
+    if (result && result.error) { status.classList.add("is-error"); status.textContent = result.error; return; }
 
     submitBtn.disabled = true;
     submitBtn.textContent = "Creando cuenta…";
     setTimeout(function () {
-      status.classList.remove("is-error");
-      status.textContent = "¡Cuenta creada! Revisa tu correo para activarla.";
       form.reset();
       submitBtn.innerHTML = submitHtml;
-      validate();
-      setTimeout(closeModal, 1800);
+      validate(); // deja el botón deshabilitado y limpia errores…
+      status.classList.remove("is-error");
+      status.textContent = "¡Solicitud enviada! El equipo de AND la aprobará y podrás iniciar sesión."; // …y luego el mensaje de éxito
+      setTimeout(closeModal, 2200);
     }, 800);
   });
 })();

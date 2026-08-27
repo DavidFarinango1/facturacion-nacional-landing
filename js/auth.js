@@ -1,8 +1,12 @@
 /* =====================================================================
    AND Local Ads — páginas de autenticación (login.html / registro.html)
+   Conectadas a la capa de datos compartida (js/store.js):
+   - Empresa: valida contra los registros corporativos aprobados → empresa.html
+   - Admin AND: valida contra los administradores → admin.html
    ===================================================================== */
 (function () {
   "use strict";
+  const S = window.ANDStore;
 
   /* ---------- Tema (compartido con la landing) ---------- */
   const root = document.documentElement;
@@ -34,6 +38,7 @@
   });
 
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const params = new URLSearchParams(location.search);
 
   /* ==================================================================
      LOGIN
@@ -44,20 +49,35 @@
     const pass = document.getElementById("loginPass");
     const submit = document.getElementById("loginSubmit");
     const status = document.getElementById("loginStatus");
+    const forgot = document.querySelector(".auth__forgot");
     const submitHtml = submit.innerHTML;
     let role = "empresa";
 
-    // Selector "Tipo de acceso"
-    document.querySelectorAll(".access__btn").forEach(function (b) {
-      b.addEventListener("click", function () {
-        role = b.dataset.role;
-        document.querySelectorAll(".access__btn").forEach(function (o) {
-          const on = o === b;
-          o.classList.toggle("is-active", on);
-          o.setAttribute("aria-checked", on ? "true" : "false");
-        });
+    // Si ya hay sesión activa, ir directo al panel
+    const existing = S.getSession();
+    if (existing) { window.location.replace(existing.role === "admin" ? "admin.html" : "empresa.html"); return; }
+
+    function setRole(r) {
+      role = r;
+      document.querySelectorAll(".access__btn").forEach(function (o) {
+        const on = o.dataset.role === r;
+        o.classList.toggle("is-active", on);
+        o.setAttribute("aria-checked", on ? "true" : "false");
       });
-    });
+      // Misma UI que el original: placeholder, "olvidaste" y pie cambian según el rol
+      email.placeholder = r === "admin" ? "admin@and.com" : "tu@email.com";
+      if (forgot) forgot.hidden = r === "admin";
+      document.querySelectorAll(".auth__foot[data-mode]").forEach(function (f) { f.hidden = f.dataset.mode !== r; });
+      status.textContent = ""; status.classList.remove("is-error");
+    }
+    document.querySelectorAll(".access__btn").forEach(function (b) { b.addEventListener("click", function () { setRole(b.dataset.role); }); });
+    // Se acepta ?next=admin o #admin (el hash sobrevive a redirecciones de servidores estáticos)
+    setRole(params.get("next") === "admin" || location.hash === "#admin" ? "admin" : "empresa");
+
+    if (params.get("registered") === "1" || location.hash === "#registered") {
+      status.classList.remove("is-error");
+      status.textContent = "¡Solicitud enviada! Podrás ingresar cuando el equipo de AND apruebe tu empresa.";
+    }
 
     loginForm.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -70,18 +90,40 @@
         status.classList.add("is-error"); status.textContent = "Ingresa tu contraseña."; pass.focus(); return;
       }
 
-      const data = { role: role, email: email.value.trim(), loginAt: new Date().toISOString() };
-      // Punto de integración: enviar credenciales a tu backend de autenticación.
-      console.log("Login:", data);
+      // Punto de integración: reemplazar S.login por una llamada a tu API de autenticación.
+      const result = S.login(role, email.value.trim(), pass.value);
+      if (result.error) { status.classList.add("is-error"); status.textContent = result.error; pass.focus(); return; }
 
       submit.disabled = true;
       submit.textContent = "Ingresando…";
+      status.textContent = result.role === "admin" ? "Acceso verificado. Abriendo el panel administrador…" : "¡Bienvenido, " + result.name + "! Abriendo tu panel…";
       setTimeout(function () {
-        status.textContent = role === "admin" ? "Acceso de administrador verificado." : "¡Bienvenido! Redirigiendo a tu panel…";
         submit.innerHTML = submitHtml;
-        submit.disabled = false;
-      }, 900);
+        window.location.href = result.role === "admin" ? "admin.html" : "empresa.html";
+      }, 700);
     });
+
+    /* ----- Registro de nuevo administrador (con código de invitación) ----- */
+    const link = document.getElementById("adminRegisterLink");
+    const aform = document.getElementById("adminRegisterForm");
+    if (link && aform) {
+      link.addEventListener("click", function (e) { e.preventDefault(); aform.hidden = !aform.hidden; if (!aform.hidden) document.getElementById("aName").focus(); });
+      aform.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const st = document.getElementById("adminRegisterStatus");
+        const name = document.getElementById("aName").value.trim();
+        const em = document.getElementById("aEmail").value.trim();
+        const pw = document.getElementById("aPass").value;
+        const code = document.getElementById("aCode").value.trim();
+        st.classList.remove("is-error");
+        if (!name || !EMAIL_RE.test(em) || pw.length < 8 || !code) { st.classList.add("is-error"); st.textContent = "Completa todos los campos (contraseña mínimo 8 caracteres)."; return; }
+        const r = S.addAdmin({ name: name, email: em, password: pw }, code);
+        if (r.error) { st.classList.add("is-error"); st.textContent = r.error; return; }
+        st.textContent = "Acceso creado. Ya puedes iniciar sesión como Admin AND.";
+        email.value = em; pass.value = ""; aform.reset();
+        setTimeout(function () { aform.hidden = true; pass.focus(); }, 1200);
+      });
+    }
   }
 
   /* ==================================================================
@@ -131,18 +173,20 @@
         ruc: document.getElementById("rRuc").value.trim(),
         phone: document.getElementById("rPhone").value.trim(),
         city: document.getElementById("rCity").value.trim(),
-        createdAt: new Date().toISOString()
+        password: pass.value
       };
-      // Punto de integración: enviar `data` (+ contraseña) a tu backend de registro.
-      console.log("Registro corporativo:", data);
+      // Se guarda como empresa "pendiente" → el administrador la aprueba en admin.html.
+      // Punto de integración: enviar `data` a tu backend de registro.
+      const r = S.addCompany(data);
+      if (r.error) { status.classList.add("is-error"); status.textContent = r.error; return; }
 
       submitBtn.disabled = true;
       submitBtn.textContent = "Creando cuenta…";
       setTimeout(function () {
         status.classList.remove("is-error");
-        status.textContent = "¡Cuenta creada! Redirigiendo al inicio de sesión…";
+        status.textContent = "¡Solicitud enviada! Redirigiendo al inicio de sesión…";
         submitBtn.innerHTML = submitHtml;
-        setTimeout(function () { window.location.href = "login.html"; }, 1500);
+        setTimeout(function () { window.location.href = "login.html#registered"; }, 1500);
       }, 800);
     });
   }

@@ -81,14 +81,26 @@
           <p id="loginStatus" class="register__status" role="status" aria-live="polite"></p>
         </form>
 
-        <footer class="auth__foot">
+        <footer class="auth__foot" data-mode="empresa">
           <p>¿Tu empresa aún no tiene cuenta? <a href="registro.html">Regístrate aquí</a></p>
           <p>¿Eres influencer? <a href="#">Únete aquí</a></p>
+        </footer>
+        <footer class="auth__foot" data-mode="admin" hidden>
+          <p>¿Nuevo administrador? <a href="#" id="adminRegisterLink">Registrar acceso</a></p>
+          <form id="adminRegisterForm" class="register__form" hidden novalidate>
+            <div class="rfield"><label for="aName">Nombre</label><div class="rfield__wrap"><input id="aName" type="text" required placeholder="Nombre completo" style="padding-left:1rem" /></div></div>
+            <div class="rfield"><label for="aEmail">Correo</label><div class="rfield__wrap"><input id="aEmail" type="email" required placeholder="nombre@and.com" style="padding-left:1rem" /></div></div>
+            <div class="rfield"><label for="aPass">Contraseña</label><div class="rfield__wrap"><input id="aPass" type="password" required minlength="8" placeholder="Mínimo 8 caracteres" style="padding-left:1rem" /></div></div>
+            <div class="rfield"><label for="aCode">Código de invitación</label><div class="rfield__wrap"><input id="aCode" type="text" required placeholder="Lo entrega un administrador" style="padding-left:1rem" /></div></div>
+            <button type="submit" class="btn btn--block">Crear acceso de administrador</button>
+            <p id="adminRegisterStatus" class="register__status" role="status" aria-live="polite"></p>
+          </form>
         </footer>
       </section>
     </div>
   </main>
 
+  <script src="js/store.js"></script>
   <script src="js/auth.js"></script>
 </body>
 </html>
