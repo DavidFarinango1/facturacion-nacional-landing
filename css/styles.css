@@ -330,99 +330,56 @@ html.dark .row--accent > span { color: var(--accent); }
 .process__cta { margin-top: 2.5rem; display: flex; flex-direction: column; align-items: center; gap: .6rem; }
 .process__hint { font-size: .85rem; color: var(--text-soft); }
 
-/* Ilustraciones (mocks) */
+/* Ilustraciones SVG de los pasos */
 .mock { position: relative; height: 13rem; border-radius: 1.1rem; background: var(--mock-canvas); border: 1px solid var(--divider); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-.mock::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(37,99,235,.12) 1px, transparent 1px); background-size: 18px 18px; z-index: 0; }
-.mock > * { position: relative; z-index: 1; }
+.mock::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(37,99,235,.12) 1px, transparent 1px); background-size: 18px 18px; }
+.illo { position: relative; width: 100%; height: 100%; max-width: 22rem; }
+.illo-surface { fill: var(--mock-bg); stroke: var(--mock-border); stroke-width: 1.5; }
+.illo-field { fill: var(--mock-soft); }
+.illo-line { fill: var(--mock-line); }
+.illo-track { fill: var(--range-track); }
+.illo-rule { stroke: var(--mock-line); stroke-width: 1; }
+.illo-fold { stroke: var(--mock-border); stroke-width: 1.5; }
+.illo-ink { fill: var(--text-main); }
+.illo-muted { fill: var(--text-soft); }
+.illo-mono { fill: var(--text-main); font-family: var(--font-mono); }
+.illo-grid line { stroke: var(--mock-line); }
+.illo-bars rect { fill: #3b82f6; opacity: .28; transform-origin: 50% 158px; transform: scaleY(0); transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.illo-track-ring { stroke: var(--range-track); }
+.illo-ring { stroke-dasharray: 239; stroke-dashoffset: 239; transition: stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1) .3s; }
+.illo-linepath { stroke-dasharray: 260; stroke-dashoffset: 260; transition: stroke-dashoffset 1.6s ease .4s; }
+.illo-area { opacity: 0; transition: opacity .8s ease 1.2s; }
+.illo-rocket { opacity: 0; transform-box: fill-box; transform-origin: center; transition: opacity .4s ease 1.9s; }
+.illo-pop { transform-box: fill-box; transform-origin: center; transform: scale(0); transition: transform .5s cubic-bezier(.34,1.56,.64,1) 1.3s; }
+.illo-stamp { transform-box: fill-box; transform-origin: center; transform: scale(2.2) rotate(8deg); opacity: 0; transition: transform .45s cubic-bezier(.2,.9,.3,1.2) .9s, opacity .3s ease .9s; }
+.illo-doc { transform-box: fill-box; transform-origin: center; transform: translateY(14px); opacity: 0; transition: all .7s ease .15s; }
+.illo-ghost { transition: opacity .6s ease .8s; }
+.illo-card { transform-box: fill-box; transform-origin: center; transform: translateX(-18px); opacity: 0; transition: all .6s ease .1s; }
+.illo-bank { transform-box: fill-box; transform-origin: center; transform: translateX(18px); opacity: 0; transition: all .6s ease .25s; }
+.illo-coin { opacity: 0; transition: opacity .4s ease .7s; }
+.illo-cursor { opacity: 0; transform: translate(230px, 60px); }
+.illo-btn { transform-box: fill-box; transform-origin: center; }
+.illo-platforms { opacity: 0; transition: opacity .6s ease 1.4s; }
 
-/* Paso 1 */
-.mock__card { width: 14rem; background: var(--mock-bg); border: 1px solid var(--mock-border); border-radius: .75rem; padding: .9rem; display: flex; flex-direction: column; gap: .6rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,.1); }
-.mock__line { height: .5rem; width: 5rem; border-radius: 9999px; background: var(--mock-line); }
-.mock__input { height: 2rem; border-radius: .5rem; background: var(--mock-soft); display: flex; align-items: center; padding: 0 .75rem; font-family: var(--font-mono); color: var(--slate-400); font-size: .85rem; }
-.mock__btn { height: 2rem; border-radius: .5rem; background: var(--emerald-500); color: #fff; font-size: .85rem; font-weight: 600; display: flex; align-items: center; justify-content: center; }
-.mock__cursor { position: absolute; color: var(--slate-900); filter: drop-shadow(0 4px 4px rgba(0,0,0,.25)); opacity: 0; transform: translate(50px, 50px); }
-html.dark .mock__cursor { color: #fff; }
-.mock__check { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0); background: var(--emerald-500); color: #fff; padding: .6rem; border-radius: 9999px; box-shadow: 0 20px 25px -5px rgba(0,0,0,.2); opacity: 0; }
-.step.is-active .mock__cursor { animation: cursorMove 1.6s ease forwards; }
-.step.is-active .mock__check { animation: pop .5s 1.2s cubic-bezier(.34,1.56,.64,1) forwards; }
-@keyframes cursorMove { 0% { opacity: 0; transform: translate(50px,50px); } 30% { opacity: 1; } 70% { opacity: 1; transform: translate(0,32px); } 100% { opacity: 0; transform: translate(0,32px); } }
-@keyframes pop { from { opacity: 0; transform: translate(-50%,-50%) scale(0); } to { opacity: 1; transform: translate(-50%,-50%) scale(1); } }
-
-/* Paso 2 */
-.mock--invoice { gap: 1.25rem; }
-.mock__docs { position: relative; width: 5rem; height: 5rem; }
-.mock__doc { position: absolute; left: 50%; top: 50%; width: 3rem; height: 4rem; margin: -2rem 0 0 -1.5rem; background: var(--mock-bg); border: 1px solid var(--mock-border); border-radius: .25rem; padding: .25rem; display: flex; flex-direction: column; gap: .25rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,.1); transform: rotate(var(--rot)); }
-.mock__doc i { display: block; height: 4px; border-radius: 9999px; background: var(--mock-line); }
-.mock__doc i:last-child { width: 66%; }
-.mock__arrow { color: var(--slate-400); }
-.mock__invoice { position: relative; width: 4.5rem; height: 6rem; border-radius: .5rem; background: linear-gradient(to bottom, var(--emerald-600), rgba(37,99,235,.85)); border: 1px solid rgba(59,130,246,.5); box-shadow: 0 20px 25px -5px rgba(0,0,0,.2); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; opacity: .5; transform: scale(.8); transition: opacity .6s, transform .6s; }
-.mock__invoice i { display: block; height: 4px; border-radius: 9999px; background: rgba(255,255,255,.25); width: 2.5rem; margin-top: .25rem; }
-.mock__invoice i:last-of-type { width: 1.5rem; }
-.mock__stamp { position: absolute; bottom: -.5rem; right: -.5rem; background: var(--emerald-500); color: #fff; padding: .25rem; border-radius: 9999px; border: 2px solid var(--mock-canvas); display: grid; place-items: center; box-shadow: 0 10px 15px -3px rgba(0,0,0,.2); }
-.step.is-active .mock__invoice { opacity: 1; transform: scale(1); }
-
-/* Paso 3 */
-.mock--pay { gap: .75rem; }
-.mock__phone { width: 4.5rem; height: 8rem; border-radius: .9rem; background: var(--slate-900); border: 3px solid var(--slate-200); padding: .4rem; display: flex; flex-direction: column; align-items: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,.2); opacity: 0; transform: translateX(-30px); transition: all .6s; }
-html.dark .mock__phone { background: var(--slate-800); border-color: var(--slate-700); }
-.mock__notch { width: 1.6rem; height: 4px; background: var(--slate-600); border-radius: 9999px; margin-bottom: .7rem; }
-.mock__screen { width: 100%; flex: 1; background: var(--slate-800); border-radius: .5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .45rem; padding: .25rem; }
-html.dark .mock__screen { background: var(--slate-900); }
-.mock__avatar { width: 1.8rem; height: 1.8rem; border-radius: 9999px; background: rgba(59,130,246,.2); color: var(--emerald-400); display: grid; place-items: center; }
-.mock__screen i { width: 2.2rem; height: 5px; background: var(--slate-600); border-radius: 9999px; }
-.mock__screen b { width: 2.6rem; height: .9rem; background: var(--emerald-500); border-radius: 9999px; margin-top: .3rem; }
-.mock__transfer { position: relative; width: 5rem; height: 3rem; display: flex; align-items: center; justify-content: center; }
-.mock__dash { position: absolute; left: 0; right: 0; border-top: 2px dashed var(--slate-400); }
-.mock__coin { position: relative; background: var(--accent); color: var(--accent-ink); padding: .45rem; border-radius: 9999px; display: grid; place-items: center; box-shadow: 0 10px 15px -3px rgba(250,204,21,.4); opacity: 0; transform: translateX(-40px) scale(0); }
-.mock__and { position: relative; width: 5rem; height: 5rem; border-radius: .75rem; background: var(--mock-bg); border: 1px solid var(--mock-border); box-shadow: 0 20px 25px -5px rgba(0,0,0,.2); display: grid; place-items: center; font-family: var(--font-head); font-weight: 800; font-size: 1.4rem; letter-spacing: -.05em; color: var(--slate-400); opacity: 0; transform: translateX(30px); transition: all .6s; }
-.mock__stamp--lg { top: -.5rem; right: -.5rem; bottom: auto; padding: .3rem; transform: scale(0); transition: transform .4s 1.4s cubic-bezier(.34,1.56,.64,1); }
-.step.is-active .mock__phone, .step.is-active .mock__and { opacity: 1; transform: none; }
-.step.is-active .mock__coin { animation: coinFly 1.2s .5s ease forwards; }
-.step.is-active .mock__stamp--lg { transform: scale(1); }
-@keyframes coinFly { 0% { opacity: 0; transform: translateX(-40px) scale(0); } 30% { opacity: 1; transform: translateX(-20px) scale(1); } 100% { opacity: 1; transform: translateX(40px) scale(1); } }
-
-/* Paso 4 */
-.mock__wallet { position: relative; width: 15rem; height: 7.5rem; border-radius: 1rem; background: var(--slate-900); border: 1px solid var(--slate-700); box-shadow: 0 25px 50px -12px rgba(0,0,0,.4); display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; transform: scale(.9); transition: transform .6s; }
-html.dark .mock__wallet { background: var(--slate-800); }
-.mock__wallet::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(59,130,246,.35), transparent 60%); opacity: .3; }
-.mock__wallet p { position: relative; color: var(--slate-400); font-size: .65rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin-bottom: .3rem; }
-.mock__amount { position: relative; display: flex; align-items: baseline; gap: .25rem; }
-.mock__amount span { font-size: 1.3rem; color: var(--accent); font-weight: 700; }
-.mock__amount strong { font-family: var(--font-head); font-size: 2.4rem; font-weight: 800; color: #fff; letter-spacing: -.03em; }
-.mock__bar { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; background: var(--slate-800); }
-.mock__bar i { display: block; height: 100%; width: 0; background: linear-gradient(to right, var(--emerald-500), var(--emerald-400)); box-shadow: 0 0 10px rgba(59,130,246,.5); transition: width 1.5s ease; }
-.mock__bolt { position: absolute; top: calc(50% - 3.75rem - 1.25rem); right: calc(50% - 7.5rem - 1.25rem); background: var(--accent); color: var(--accent-ink); padding: .6rem; border-radius: .7rem; border: 3px solid var(--mock-canvas); box-shadow: 0 10px 15px -3px rgba(0,0,0,.2); transform: scale(0) rotate(-20deg); transition: transform .5s 1.2s cubic-bezier(.34,1.56,.64,1); }
-.mock__pill { position: absolute; bottom: .7rem; display: flex; align-items: center; gap: .4rem; padding: .25rem .7rem; border-radius: 9999px; font-size: .78rem; font-weight: 600; background: rgba(37,99,235,.12); color: var(--primary); opacity: 0; transform: translateY(10px); transition: all .5s 1.5s; }
-.step.is-active .mock__wallet { transform: scale(1); }
-.step.is-active .mock__bar i { width: 100%; }
-.step.is-active .mock__bolt { transform: scale(1) rotate(0); }
-.step.is-active .mock__pill { opacity: 1; transform: none; }
-
-/* Paso 5 */
-.mock__bars { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 1.5rem 1.5rem; opacity: .35; }
-.mock__bars i { width: 1.1rem; height: 10%; background: var(--emerald-500); border-radius: .3rem .3rem 0 0; transition: height 1s ease; }
-.step.is-active .mock__bars i:nth-child(1) { height: 25%; transition-delay: .1s; }
-.step.is-active .mock__bars i:nth-child(2) { height: 40%; transition-delay: .2s; }
-.step.is-active .mock__bars i:nth-child(3) { height: 30%; transition-delay: .3s; }
-.step.is-active .mock__bars i:nth-child(4) { height: 55%; transition-delay: .4s; }
-.step.is-active .mock__bars i:nth-child(5) { height: 45%; transition-delay: .5s; }
-.step.is-active .mock__bars i:nth-child(6) { height: 70%; transition-delay: .6s; }
-.step.is-active .mock__bars i:nth-child(7) { height: 60%; transition-delay: .7s; }
-.step.is-active .mock__bars i:nth-child(8) { height: 85%; transition-delay: .8s; }
-.mock__rocket { position: absolute; color: var(--emerald-500); filter: drop-shadow(0 25px 25px rgba(0,0,0,.25)); transform: translate(-150px,150px) rotate(45deg); opacity: 0; }
-.mock__rocket svg { width: 64px; height: 64px; }
-.mock__flame { position: absolute; border-radius: 9999px; }
-.mock__flame--a { bottom: -1rem; left: -1rem; width: 2.5rem; height: 2.5rem; background: #fe6e00; filter: blur(12px); }
-.mock__flame--b { bottom: -.5rem; left: -.5rem; width: 1.5rem; height: 1.5rem; background: #fac800; filter: blur(4px); }
-.step.is-active .mock__rocket { animation: rocketLaunch 3.2s cubic-bezier(.3,.7,.3,1) infinite; }
-.step.is-active .mock__flame { animation: flameFlicker .35s ease-in-out infinite alternate; }
-@keyframes rocketLaunch { 0% { opacity: 0; transform: translate(-150px,150px) rotate(45deg); } 12% { opacity: 1; } 80% { opacity: 1; transform: translate(70px,-150px) rotate(45deg); } 100% { opacity: 0; transform: translate(95px,-200px) rotate(45deg); } }
-@keyframes flameFlicker { from { transform: scale(.8); opacity: .7; } to { transform: scale(1.25); opacity: 1; } }
-.mock__fab { position: absolute; bottom: 1rem; right: 1rem; background: var(--accent); color: var(--accent-ink); padding: .8rem; border-radius: 9999px; box-shadow: 0 20px 25px -5px rgba(0,0,0,.2); transform: scale(0); transition: transform .5s 1.4s cubic-bezier(.34,1.56,.64,1); display: grid; place-items: center; }
-.mock__fab svg { position: relative; z-index: 1; }
-.mock__ping { position: absolute; inset: 0; border-radius: 9999px; background: var(--accent); opacity: .3; animation: ping 1.2s cubic-bezier(0,0,.2,1) infinite; }
-.step.is-active .mock__fab { transform: scale(1); }
-@keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+.step.is-active .illo-bars rect { transform: scaleY(1); }
+.step.is-active .illo-bars rect:nth-child(2) { transition-delay: .1s; } .step.is-active .illo-bars rect:nth-child(3) { transition-delay: .2s; } .step.is-active .illo-bars rect:nth-child(4) { transition-delay: .3s; } .step.is-active .illo-bars rect:nth-child(5) { transition-delay: .4s; } .step.is-active .illo-bars rect:nth-child(6) { transition-delay: .5s; } .step.is-active .illo-bars rect:nth-child(7) { transition-delay: .6s; }
+.step.is-active .illo-ring { stroke-dashoffset: 0; }
+.step.is-active .illo-linepath { stroke-dashoffset: 0; }
+.step.is-active .illo-area { opacity: 1; }
+.step.is-active .illo-rocket { opacity: 1; animation: illoRocket 2.4s ease-in-out 2.2s infinite; }
+.step.is-active .illo-pop { transform: scale(1); }
+.step.is-active .illo-stamp { transform: scale(1) rotate(0); opacity: 1; }
+.step.is-active .illo-doc { transform: none; opacity: 1; }
+.step.is-active .illo-ghost { opacity: .25; }
+.step.is-active .illo-card, .step.is-active .illo-bank { transform: none; opacity: 1; }
+.step.is-active .illo-coin { opacity: 1; }
+.step.is-active .illo-cursor { animation: illoCursor 1.8s ease .3s forwards; }
+.step.is-active .illo-btn { animation: illoPress .35s ease 1.15s; }
+.step.is-active .illo-platforms { opacity: 1; }
+@keyframes illoCursor { 0% { opacity: 0; transform: translate(230px,60px); } 25% { opacity: 1; } 70% { opacity: 1; transform: translate(150px,146px); } 100% { opacity: 0; transform: translate(150px,146px); } }
+@keyframes illoPress { 0%, 100% { transform: scale(1); } 50% { transform: scale(.96); } }
+@keyframes illoRocket { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(4px,-8px); } }
+@media (prefers-reduced-motion: reduce) { .illo-bars rect, .illo-ring, .illo-linepath, .illo-area, .illo-rocket, .illo-pop, .illo-stamp, .illo-doc, .illo-card, .illo-bank, .illo-coin, .illo-platforms { transition: none; transform: none; opacity: 1; stroke-dashoffset: 0; } }
 
 /* =====================================================================
    CLIENTES
