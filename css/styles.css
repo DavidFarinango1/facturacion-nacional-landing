@@ -512,9 +512,8 @@ html:not(.dark) .client { border-color: rgba(16,19,24,.10); background: #ffffff;
 html:not(.dark) .client img { filter: brightness(0); opacity: .6; }
 html:not(.dark) .client:hover { border-color: rgba(59,130,246,.45); background: #ffffff; box-shadow: 0 8px 24px rgba(59,130,246,.15); }
 html:not(.dark) .client:hover img { filter: brightness(0); opacity: .95; }
-html:not(.dark) .marquee__fade--l { background: linear-gradient(to right, #eef2ff, transparent); }
-html:not(.dark) .marquee__fade--r { background: linear-gradient(to left, #eef2ff, transparent); }
-html:not(.dark) .clients { background: #eef2ff; }
+html:not(.dark) .marquee__fade--l { background: linear-gradient(to right, var(--background), transparent); }
+html:not(.dark) .marquee__fade--r { background: linear-gradient(to left, var(--background), transparent); }
 @media (min-width: 640px) { .client { height: 5rem; width: 9rem; } }
 @media (min-width: 768px) { .client { height: 6rem; width: 11rem; } }
 .client:hover { border-color: rgba(59,130,246,.25); background: rgba(255,255,255,.06); box-shadow: 0 0 40px rgba(59,130,246,.08); }
