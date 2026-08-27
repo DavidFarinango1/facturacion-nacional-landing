@@ -514,7 +514,8 @@ html:not(.dark) .client { border-color: rgba(0,0,0,.06); background: rgba(255,25
 /* =====================================================================
    FACTURAR
    ===================================================================== */
-.billing { position: relative; min-height: 100vh; padding: var(--fib-6) 0; display: flex; align-items: center; }
+.billing { position: relative; padding: var(--fib-5) 0; }
+.billing .section-head { margin-bottom: var(--fib-4); }
 .billing__grid { display: grid; gap: 1rem; max-width: 64rem; margin-inline: auto; }
 @media (min-width: 768px) { .billing__grid { gap: 1.5rem; } }
 @media (min-width: 1024px) { .billing__grid { grid-template-columns: 1fr 1fr; } }
@@ -523,7 +524,7 @@ html:not(.dark) .client { border-color: rgba(0,0,0,.06); background: rgba(255,25
 .billing__card h3 { font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: 600; }
 .billing__card p { margin-top: .75rem; line-height: 1.6; opacity: .8; }
 html.dark .billing__card p { color: var(--slate-300); opacity: 1; }
-.billing__actions { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; margin-top: var(--fib-6); }
+.billing__actions { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; margin-top: var(--fib-4); }
 @media (min-width: 640px) { .billing__actions { flex-direction: row; } }
 .billing__actions .btn { width: 100%; }
 @media (min-width: 640px) { .billing__actions .btn { width: auto; } }
