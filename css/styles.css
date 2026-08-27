@@ -255,10 +255,14 @@ html.dark .calc__input > label { color: var(--slate-300); }
 }
 #investInput::-webkit-outer-spin-button, #investInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 #investInput:focus { border-color: var(--accent); }
-#investRange { width: 100%; height: 8px; border-radius: .5rem; background: var(--range-track); appearance: none; cursor: pointer; accent-color: var(--primary); }
-#investRange::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; border-radius: 9999px; background: var(--primary); border: 0; }
-#investRange::-moz-range-thumb { width: 18px; height: 18px; border-radius: 9999px; background: var(--primary); border: 0; }
-.calc__range-labels { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: .75rem; color: var(--slate-400); margin-top: .5rem; }
+#investRange { --pct: 9%; width: 100%; height: 12px; border-radius: 9999px; appearance: none; cursor: pointer; outline: none; border: 1px solid rgba(59,130,246,.25); background: linear-gradient(to right, var(--emerald-600) 0%, var(--emerald-500) var(--pct), var(--range-track) var(--pct), var(--range-track) 100%); box-shadow: inset 0 1px 2px rgba(0,0,0,.08); }
+#investRange:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,.25); }
+#investRange::-webkit-slider-thumb { appearance: none; width: 26px; height: 26px; border-radius: 9999px; background: var(--emerald-600); border: 4px solid #fff; box-shadow: 0 0 0 2px var(--accent), 0 4px 12px rgba(0,0,0,.25); cursor: grab; transition: transform .15s; }
+#investRange::-webkit-slider-thumb:hover { transform: scale(1.1); }
+#investRange:active::-webkit-slider-thumb { cursor: grabbing; }
+#investRange::-moz-range-thumb { width: 26px; height: 26px; border-radius: 9999px; background: var(--emerald-600); border: 4px solid #fff; box-shadow: 0 0 0 2px var(--accent), 0 4px 12px rgba(0,0,0,.25); cursor: grab; }
+.calc__range-labels { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: .8rem; font-weight: 600; color: var(--slate-600); margin-top: .6rem; }
+html.dark .calc__range-labels { color: var(--slate-300); }
 .calc__grid { display: grid; gap: 1.5rem; margin-bottom: 2rem; }
 @media (min-width: 768px) { .calc__grid { grid-template-columns: 1fr 1fr; } }
 

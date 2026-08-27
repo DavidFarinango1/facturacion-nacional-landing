@@ -91,7 +91,13 @@
     return { inv, isd, iva1, visible, nonDeductible, total1, fee, iva2, total2, saveMonth, savePct, saveYear, freeMonths };
   }
 
+  function updateRangeFill() {
+    const min = +investRange.min, max = +investRange.max, v = +investRange.value;
+    investRange.style.setProperty("--pct", Math.round(((v - min) / (max - min)) * 100) + "%");
+  }
+
   function render(inv) {
+    updateRangeFill();
     const r = compute(inv);
     outs.inv1.textContent = fmt(r.inv);
     outs.isd1.textContent = fmt(r.isd);
