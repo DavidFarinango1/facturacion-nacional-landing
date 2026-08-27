@@ -468,8 +468,10 @@ html.dark .mock__pill { background: rgba(30,58,138,.3); color: var(--emerald-400
 .mock__flame { position: absolute; border-radius: 9999px; }
 .mock__flame--a { bottom: -1rem; left: -1rem; width: 2.5rem; height: 2.5rem; background: #fe6e00; filter: blur(12px); }
 .mock__flame--b { bottom: -.5rem; left: -.5rem; width: 1.5rem; height: 1.5rem; background: #fac800; filter: blur(4px); }
-.step.is-active .mock__rocket { animation: rocketFly 1.8s cubic-bezier(.2,.8,.2,1) forwards; }
-@keyframes rocketFly { 0% { opacity: 0; transform: translate(-150px,150px) rotate(45deg); } 20% { opacity: 1; } 100% { opacity: 1; transform: translate(0,0) rotate(45deg); } }
+.step.is-active .mock__rocket { animation: rocketLaunch 3.2s cubic-bezier(.3,.7,.3,1) infinite; }
+.step.is-active .mock__flame { animation: flameFlicker .35s ease-in-out infinite alternate; }
+@keyframes rocketLaunch { 0% { opacity: 0; transform: translate(-150px,150px) rotate(45deg); } 12% { opacity: 1; } 80% { opacity: 1; transform: translate(70px,-150px) rotate(45deg); } 100% { opacity: 0; transform: translate(95px,-200px) rotate(45deg); } }
+@keyframes flameFlicker { from { transform: scale(.8); opacity: .7; } to { transform: scale(1.25); opacity: 1; } }
 .mock__fab { position: absolute; bottom: 1.5rem; right: 1.5rem; background: var(--emerald-500); color: #fff; padding: 1rem; border-radius: 9999px; box-shadow: 0 20px 25px -5px rgba(0,0,0,.2); transform: scale(0); transition: transform .5s 1.4s cubic-bezier(.34,1.56,.64,1); display: grid; place-items: center; }
 .mock__fab svg { position: relative; z-index: 1; transition: transform .2s; }
 .mock__fab:hover svg { transform: scale(1.1); }
