@@ -221,6 +221,8 @@ html.dark .platforms__label { color: var(--slate-500); opacity: 1; }
 @media (min-width: 768px) { .platforms__logos img { height: 2.5rem; } }
 @media (min-width: 1024px) { .platforms__logos img { height: 2.75rem; } }
 .platforms__logos img:hover { transform: scale(1.05); }
+html:not(.dark) .platforms__logos img { filter: brightness(0); opacity: .75; }
+html:not(.dark) .platforms__logos img:hover { opacity: 1; }
 
 /* =====================================================================
    EMPRESAS (calculadora + proceso)
