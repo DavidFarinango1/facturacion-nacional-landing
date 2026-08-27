@@ -159,21 +159,21 @@
     if (leadFilter.status) leads = leads.filter(function (l) { return l.status === leadFilter.status; });
     if (leadFilter.q) { const q = leadFilter.q.toLowerCase(); leads = leads.filter(function (l) { return (l.fullName + " " + l.companyName + " " + l.email + " " + l.phone).toLowerCase().indexOf(q) >= 0; }); }
     const rows = leads.map(function (l) {
+      const st = STATUS.lead[l.status] || ["neutral", l.status];
       return '<tr>\
 <td><strong>' + esc(l.companyName) + '</strong><div class="muted">' + esc(l.fullName) + '</div></td>\
-<td>' + esc(l.email) + '<div class="muted">' + esc(l.phone) + '</div></td>\
+<td class="cell-contact"><a href="mailto:' + esc(l.email) + '">' + esc(l.email) + '</a><div class="muted">' + esc(l.phone) + '</div></td>\
 <td class="num">' + fmt(l.monthlyBudget) + '</td>\
 <td class="num">' + fmt(l.saveYear) + '<div class="muted">' + fmt(l.saveMonth) + '/mes</div></td>\
-<td>' + pill("lead", l.status) + '</td>\
-<td class="muted">' + fdatetime(l.createdAt) + '</td>\
-<td class="actions"><select class="pselect" data-lead-status="' + l.id + '"><option value="nuevo"' + (l.status === "nuevo" ? " selected" : "") + '>Nuevo</option><option value="contactado"' + (l.status === "contactado" ? " selected" : "") + '>Contactado</option><option value="convertido"' + (l.status === "convertido" ? " selected" : "") + '>Convertido</option></select>\
-<button class="pbtn pbtn--sm" data-lead-detail="' + l.id + '">Detalle</button><button class="pbtn pbtn--sm pbtn--bad" data-lead-del="' + l.id + '">Eliminar</button></td></tr>';
+<td><select class="pselect pselect--status pselect--' + st[0] + '" data-lead-status="' + l.id + '" aria-label="Estado"><option value="nuevo"' + (l.status === "nuevo" ? " selected" : "") + '>● Nuevo</option><option value="contactado"' + (l.status === "contactado" ? " selected" : "") + '>● Contactado</option><option value="convertido"' + (l.status === "convertido" ? " selected" : "") + '>● Convertido</option></select></td>\
+<td class="muted cell-date" title="' + fdatetime(l.createdAt) + '">' + fdate(l.createdAt) + '</td>\
+<td class="actions actions--nowrap"><button class="pbtn pbtn--sm" data-lead-detail="' + l.id + '">Detalle</button><button class="pbtn pbtn--sm pbtn--bad pbtn--icon" data-lead-del="' + l.id + '" title="Eliminar" aria-label="Eliminar">✕</button></td></tr>';
     }).join("");
     return '<section class="panel"><div class="panel__head"><div><h2>' + leads.length + ' lead' + (leads.length === 1 ? "" : "s") + '</h2><p>Personas que dejaron sus datos en "Deja tus datos y accede a tu ahorro"</p></div>\
 <div class="filters"><input class="pinput pinput--search" id="leadQ" placeholder="Buscar por nombre, empresa, correo…" value="' + esc(leadFilter.q) + '" />\
 <select class="pselect" id="leadStatus"><option value="">Todos los estados</option><option value="nuevo"' + (leadFilter.status === "nuevo" ? " selected" : "") + '>Nuevos</option><option value="contactado"' + (leadFilter.status === "contactado" ? " selected" : "") + '>Contactados</option><option value="convertido"' + (leadFilter.status === "convertido" ? " selected" : "") + '>Convertidos</option></select>\
 <button class="pbtn" id="leadExport">Exportar CSV</button></div></div>\
-' + (rows ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>Empresa / contacto</th><th>Contacto</th><th class="num">Pauta mensual</th><th class="num">Ahorro anual</th><th>Estado</th><th>Fecha</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>' : '<p class="empty">No hay leads que coincidan.</p>') + '</section>';
+' + (rows ? '<div class="table-wrap"><table class="tbl tbl--compact"><thead><tr><th>Empresa / contacto</th><th>Correo / teléfono</th><th class="num">Pauta</th><th class="num">Ahorro anual</th><th>Estado</th><th>Fecha</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>' : '<p class="empty">No hay leads que coincidan.</p>') + '</section>';
   };
 
   /* ==================================================================

@@ -125,6 +125,22 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: .85rem; }
 .tbl .actions { display: flex; gap: .35rem; justify-content: flex-end; flex-wrap: wrap; }
 .empty { padding: 2rem; text-align: center; color: var(--panel-muted); font-size: .9rem; }
 
+/* Tabla compacta (Leads): cabe completa sin scroll horizontal en 1280px+ */
+.tbl--compact { font-size: .8rem; }
+.tbl--compact th, .tbl--compact td { padding: .55rem .5rem; }
+.tbl--compact td strong { font-size: .82rem; }
+.tbl--compact .cell-contact { max-width: 220px; overflow-wrap: anywhere; }
+.tbl--compact .cell-contact a { color: inherit; }
+.tbl--compact .cell-contact a:hover { color: var(--emerald-500); }
+.tbl--compact .cell-date { white-space: nowrap; font-size: .75rem; }
+.actions--nowrap { flex-wrap: nowrap; }
+.pbtn--icon { padding: .3rem .5rem; line-height: 1; }
+.pselect--status { padding: .3rem 1.4rem .3rem .5rem; font-size: .72rem; font-weight: 700; border-radius: 9999px; cursor: pointer; }
+.pselect--info { background: var(--info-bg); color: var(--info); border-color: transparent; }
+.pselect--warn { background: var(--warn-bg); color: var(--warn); border-color: transparent; }
+.pselect--ok { background: var(--ok-bg); color: var(--ok); border-color: transparent; }
+.pselect--status option { color: var(--panel-text); background: var(--panel-surface); font-weight: 500; }
+
 /* Pills de estado (siempre con texto, nunca solo color) */
 .pill { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .6rem; border-radius: 9999px; font-size: .72rem; font-weight: 700; white-space: nowrap; }
 .pill::before { content: ""; width: 6px; height: 6px; border-radius: 9999px; background: currentColor; }
@@ -237,3 +253,5 @@ html.dark .plat__head img, html.dark .plat__mini { filter: brightness(0) invert(
 .act-ico--pauta { background: var(--info-bg); color: var(--info); }
 input[type="file"].pinput { padding: .45rem; }
 .tbl .actions a.pbtn { text-decoration: none; }
+
+@media (max-width: 1200px) { .tbl--compact .cell-contact, .tbl--compact th:nth-child(2) { display: none; } }
