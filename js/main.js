@@ -134,6 +134,17 @@
     investInput.value = investRange.value;
     render(sanitize(investRange.value));
   });
+  const presets = document.querySelectorAll("[data-preset]");
+  function syncPresets(v) { presets.forEach(function (b) { b.classList.toggle("is-on", +b.dataset.preset === v); }); }
+  presets.forEach(function (b) {
+    b.addEventListener("click", function () {
+      const v = +b.dataset.preset;
+      investInput.value = v; investRange.value = Math.min(Math.max(v, 100), 10000);
+      render(v); syncPresets(v);
+    });
+  });
+  investInput.addEventListener("input", function () { syncPresets(sanitize(investInput.value)); });
+  investRange.addEventListener("input", function () { syncPresets(+investRange.value); });
   updateRateLabels();
   render(sanitize(investInput.value));
 
@@ -230,12 +241,15 @@
   /* ------------------------------------------------------------------
      5) Navegación lateral por secciones
      ------------------------------------------------------------------ */
-  const navItems = Array.prototype.slice.call(document.querySelectorAll(".side-nav__item"));
+  const navItems = Array.prototype.slice.call(document.querySelectorAll(".nav__link[data-target]"));
   const sections = navItems.map(function (b) { return document.getElementById(b.dataset.target); });
 
-  navItems.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      document.getElementById(btn.dataset.target).scrollIntoView({ behavior: "smooth", block: "start" });
+  document.querySelectorAll("[data-target]").forEach(function (el) {
+    el.addEventListener("click", function (e) {
+      const target = document.getElementById(el.dataset.target);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 
