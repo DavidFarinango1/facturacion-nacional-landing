@@ -508,7 +508,13 @@ html.dark .clients__title { color: rgba(255,255,255,.9); }
 @media (min-width: 640px) { .marquee__group { gap: 3rem; padding-right: 3rem; } }
 @media (min-width: 768px) { .marquee__group { gap: 3.5rem; padding-right: 3.5rem; } }
 .client { position: relative; flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: 4rem; width: 8rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,.05); background: rgba(255,255,255,.02); backdrop-filter: blur(4px); transition: all .5s; }
-html:not(.dark) .client { border-color: rgba(0,0,0,.06); background: rgba(255,255,255,.5); }
+html:not(.dark) .client { border-color: rgba(16,19,24,.10); background: #ffffff; box-shadow: 0 4px 14px rgba(16,19,24,.06); }
+html:not(.dark) .client img { filter: brightness(0); opacity: .6; }
+html:not(.dark) .client:hover { border-color: rgba(59,130,246,.45); background: #ffffff; box-shadow: 0 8px 24px rgba(59,130,246,.15); }
+html:not(.dark) .client:hover img { filter: brightness(0); opacity: .95; }
+html:not(.dark) .marquee__fade--l { background: linear-gradient(to right, #eef2ff, transparent); }
+html:not(.dark) .marquee__fade--r { background: linear-gradient(to left, #eef2ff, transparent); }
+html:not(.dark) .clients { background: #eef2ff; }
 @media (min-width: 640px) { .client { height: 5rem; width: 9rem; } }
 @media (min-width: 768px) { .client { height: 6rem; width: 11rem; } }
 .client:hover { border-color: rgba(59,130,246,.25); background: rgba(255,255,255,.06); box-shadow: 0 0 40px rgba(59,130,246,.08); }
