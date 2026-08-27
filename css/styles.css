@@ -554,3 +554,55 @@ html.dark .footer__dev img { filter: drop-shadow(0 9px 7px rgba(0,0,0,.1)); }
 /* ---------- Keyframes utilitarios ---------- */
 @keyframes pulse { 50% { opacity: .03; } }
 @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+
+/* =====================================================================
+   MODAL — Registro Corporativo (se abre desde "Optimizar mi gestión")
+   ===================================================================== */
+.modal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem; }
+.modal.is-open { display: flex; }
+.modal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(6px); animation: fadeIn .25s ease; }
+.modal__dialog {
+  position: relative; width: 100%; max-width: 30rem; max-height: calc(100vh - 2rem); overflow-y: auto;
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 1.5rem; padding: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,.5); backdrop-filter: blur(24px); animation: slideUp .3s ease;
+}
+html:not(.dark) .modal__dialog { background: #ffffff; }
+html.dark .modal__dialog { background: linear-gradient(180deg, rgba(3,15,40,.96), rgba(16,19,24,.98)); border-color: rgba(59,130,246,.25); }
+.modal__close { position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px; border-radius: 9999px; border: 1px solid var(--card-border); background: transparent; color: var(--muted); display: grid; place-items: center; transition: all .2s; }
+.modal__close:hover { color: var(--text-main); border-color: var(--emerald-500); }
+body.modal-open { overflow: hidden; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+.register__head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.75rem; padding-right: 2.5rem; }
+.register__icon { flex-shrink: 0; width: 48px; height: 48px; border-radius: .75rem; background: var(--emerald-600); color: #fff; display: grid; place-items: center; box-shadow: 0 10px 15px -3px rgba(59,130,246,.35); }
+html.dark .register__icon { background: var(--emerald-500); }
+.register__head h3 { font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
+.register__head p { font-size: .875rem; color: var(--muted); margin-top: .125rem; }
+html.dark .register__head p { color: var(--slate-400); }
+
+.register__form { display: flex; flex-direction: column; gap: 1.125rem; }
+.rfield label { display: block; font-size: .8125rem; font-weight: 500; color: var(--muted); margin-bottom: .5rem; }
+html.dark .rfield label { color: var(--slate-300); }
+.rfield__wrap { position: relative; }
+.rfield__icon { position: absolute; left: .875rem; top: 50%; transform: translateY(-50%); color: var(--slate-400); pointer-events: none; transition: color .2s; }
+.rfield__wrap:focus-within .rfield__icon { color: var(--emerald-500); }
+.rfield input {
+  width: 100%; font: inherit; font-size: .9375rem; color: var(--text-main); background: var(--input-bg);
+  border: 1px solid var(--input-border); border-radius: .5rem; padding: .8125rem 1rem .8125rem 2.625rem; outline: none; transition: border-color .2s, box-shadow .2s;
+}
+.rfield input:focus { border-color: var(--emerald-500); box-shadow: 0 0 0 2px rgba(59,130,246,.2); }
+.rfield input.is-invalid { border-color: var(--red-500); }
+.rfield input::placeholder { color: var(--slate-500); }
+
+.register__terms { display: flex; align-items: flex-start; gap: .75rem; font-size: .875rem; color: var(--muted); cursor: pointer; margin-top: .25rem; }
+html.dark .register__terms { color: var(--slate-300); }
+.register__terms input { margin-top: 3px; width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--emerald-500); }
+.register__terms a { color: var(--yellow-600); }
+html.dark .register__terms a { color: var(--yellow-400); }
+.register__terms a:hover { text-decoration: underline; }
+.register__form .btn--block { margin-top: .5rem; }
+.register__form .btn--block:disabled { background: var(--slate-700); color: var(--slate-400); opacity: 1; box-shadow: none; }
+html:not(.dark) .register__form .btn--block:disabled { background: var(--slate-200); color: var(--slate-500); }
+.register__status { text-align: center; font-size: .875rem; font-weight: 600; color: var(--emerald-500); min-height: 1.25rem; }
+.register__status.is-error { color: var(--red-500); }

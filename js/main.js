@@ -237,3 +237,93 @@
   const group = track.querySelector(".marquee__group");
   track.appendChild(group.cloneNode(true));
 })();
+
+/* =====================================================================
+   7) Modal "Registro Corporativo" — se abre desde "Optimizar mi gestión"
+   ===================================================================== */
+(function () {
+  "use strict";
+
+  const modal = document.getElementById("registerModal");
+  const form = document.getElementById("registerForm");
+  const submitBtn = document.getElementById("registerSubmit");
+  const submitHtml = submitBtn.innerHTML;
+  const status = document.getElementById("registerStatus");
+  const terms = document.getElementById("rTerms");
+  const pass = document.getElementById("rPass");
+  const pass2 = document.getElementById("rPass2");
+  const fields = ["rCompany", "rEmail", "rRuc", "rPhone", "rCity", "rPass", "rPass2"].map(function (id) { return document.getElementById(id); });
+  let lastFocus = null;
+
+  function openModal() {
+    lastFocus = document.activeElement;
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    setTimeout(function () { fields[0].focus(); }, 50);
+  }
+  function closeModal() {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  document.querySelectorAll("[data-open-register]").forEach(function (b) { b.addEventListener("click", openModal); });
+  document.querySelectorAll("[data-close-register]").forEach(function (b) { b.addEventListener("click", closeModal); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+  });
+
+  // Solo dígitos en RUC
+  document.getElementById("rRuc").addEventListener("input", function (e) {
+    e.target.value = e.target.value.replace(/\D/g, "");
+  });
+
+  function validate() {
+    const filled = fields.every(function (f) { return f.value.trim() !== ""; });
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById("rEmail").value.trim());
+    const passOk = pass.value.length >= 8;
+    const match = pass.value === pass2.value;
+    pass2.classList.toggle("is-invalid", pass2.value !== "" && !match);
+    submitBtn.disabled = !(filled && emailOk && passOk && match && terms.checked);
+
+    if (pass2.value !== "" && !match) {
+      status.classList.add("is-error"); status.textContent = "Las contraseñas no coinciden.";
+    } else if (pass.value !== "" && !passOk) {
+      status.classList.add("is-error"); status.textContent = "La contraseña debe tener al menos 8 caracteres.";
+    } else {
+      status.classList.remove("is-error"); status.textContent = "";
+    }
+  }
+  fields.forEach(function (f) { f.addEventListener("input", validate); });
+  terms.addEventListener("change", validate);
+  validate();
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (submitBtn.disabled) return;
+
+    const data = {
+      company: document.getElementById("rCompany").value.trim(),
+      email: document.getElementById("rEmail").value.trim(),
+      ruc: document.getElementById("rRuc").value.trim(),
+      phone: document.getElementById("rPhone").value.trim(),
+      city: document.getElementById("rCity").value.trim(),
+      createdAt: new Date().toISOString()
+    };
+    // Punto de integración: enviar `data` (+ contraseña) a tu backend de registro.
+    console.log("Registro corporativo:", data);
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Creando cuenta…";
+    setTimeout(function () {
+      status.classList.remove("is-error");
+      status.textContent = "¡Cuenta creada! Revisa tu correo para activarla.";
+      form.reset();
+      submitBtn.innerHTML = submitHtml;
+      validate();
+      setTimeout(closeModal, 1800);
+    }, 800);
+  });
+})();
