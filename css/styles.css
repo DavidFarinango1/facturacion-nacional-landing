@@ -484,7 +484,7 @@ html.dark .mock__pill { background: rgba(30,58,138,.3); color: var(--emerald-400
 /* =====================================================================
    CLIENTES
    ===================================================================== */
-.clients { padding: var(--fib-4) 0; overflow: hidden; }
+.clients { padding: var(--fib-4) 0 var(--fib-2); overflow: hidden; }
 .clients .container { margin-bottom: var(--fib-3); }
 .clients__eyebrow { text-align: center; font-size: .875rem; font-weight: 500; text-transform: uppercase; letter-spacing: .2em; color: var(--yellow-600); margin-bottom: .75rem; }
 html.dark .clients__eyebrow { color: var(--yellow-400); }
@@ -496,7 +496,7 @@ html.dark .clients__title { color: rgba(255,255,255,.9); }
 @media (min-width: 768px) { .marquee__fade { width: 13rem; } }
 .marquee__fade--l { left: 0; background: linear-gradient(to right, var(--background), transparent); }
 .marquee__fade--r { right: 0; background: linear-gradient(to left, var(--background), transparent); }
-.marquee__track { display: flex; width: max-content; padding: 1.5rem 0; animation: clientMarquee 40s linear infinite; }
+.marquee__track { display: flex; width: max-content; padding: 1rem 0 .5rem; animation: clientMarquee 40s linear infinite; }
 .marquee:hover .marquee__track { animation-play-state: paused; }
 .marquee__group { display: flex; align-items: center; gap: 2rem; padding-right: 2rem; }
 @media (min-width: 640px) { .marquee__group { gap: 3rem; padding-right: 3rem; } }
@@ -515,7 +515,7 @@ html:not(.dark) .client { border-color: rgba(0,0,0,.06); background: rgba(255,25
 /* =====================================================================
    FACTURAR
    ===================================================================== */
-.billing { position: relative; padding: var(--fib-5) 0; }
+.billing { position: relative; padding: var(--fib-3) 0 var(--fib-5); }
 .billing .section-head { margin-bottom: var(--fib-4); }
 .billing__grid { display: grid; gap: 1rem; max-width: 64rem; margin-inline: auto; }
 @media (min-width: 768px) { .billing__grid { gap: 1.5rem; } }
