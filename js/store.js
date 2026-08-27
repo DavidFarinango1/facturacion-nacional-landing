@@ -19,7 +19,15 @@ window.ANDStore = (function () {
     settings: "and_settings",
     session: "and_session",
     activity: "and_activity",
-    seeded: "and_seeded_v1"
+    spends: "and_spends",
+    seeded: "and_seeded_v2"
+  };
+
+  const PLATFORMS = {
+    meta: { name: "Meta Ads", logo: "assets/metaads.png" },
+    google: { name: "Google Ads", logo: "assets/googleads.png" },
+    tiktok: { name: "TikTok Ads", logo: "assets/tiktokads.png" },
+    x: { name: "X Ads", logo: "assets/xads.png" }
   };
 
   const DEFAULT_SETTINGS = {
@@ -160,7 +168,7 @@ window.ANDStore = (function () {
     const inv = {
       id: uid("fac"), number: nextInvoiceNumber(), companyId: c.id, companyName: c.company,
       amount: amount, isd: isd, fee: fee, iva: iva, total: amount + isd + fee + iva,
-      status: "pendiente", createdAt: now(), paidAt: null
+      status: "pendiente", createdAt: now(), paidAt: null, receipt: null, receiptNote: ""
     };
     const list = getInvoices();
     list.unshift(inv);
@@ -168,18 +176,75 @@ window.ANDStore = (function () {
     logActivity("factura", "Factura " + inv.number + " emitida a " + c.company + " por $" + inv.total.toFixed(2));
     return inv;
   }
+  function getInvoice(id) { return getInvoices().find(function (f) { return f.id === id; }) || null; }
+
+  /* Paso 3 — la empresa sube el comprobante de pago → factura "en_revision" */
+  function uploadReceipt(id, receipt) {
+    const list = getInvoices();
+    const i = list.findIndex(function (f) { return f.id === id; });
+    if (i < 0) return { error: "Factura no encontrada." };
+    if (list[i].status === "pagada") return { error: "Esta factura ya está pagada." };
+    if (!receipt || !receipt.dataUrl) return { error: "Adjunta el comprobante." };
+    if (receipt.dataUrl.length > 1400000) return { error: "El archivo es muy grande (máx. ~1 MB). Usa una imagen más pequeña." };
+    list[i].receipt = { dataUrl: receipt.dataUrl, name: receipt.name || "comprobante", type: receipt.type || "", reference: receipt.reference || "", uploadedAt: now() };
+    list[i].receiptNote = "";
+    list[i].status = "en_revision";
+    try { write(KEYS.invoices, list); } catch (_) { return { error: "No se pudo guardar el archivo (espacio insuficiente)." }; }
+    logActivity("factura", list[i].companyName + " subió el comprobante de la factura " + list[i].number + (receipt.reference ? " (ref. " + receipt.reference + ")" : ""));
+    return list[i];
+  }
+  /* El admin rechaza el comprobante → vuelve a "pendiente" con motivo */
+  function rejectReceipt(id, note) {
+    const list = getInvoices();
+    const i = list.findIndex(function (f) { return f.id === id; });
+    if (i < 0 || list[i].status !== "en_revision") return null;
+    list[i].status = "pendiente";
+    list[i].receipt = null;
+    list[i].receiptNote = note || "Comprobante rechazado. Vuelve a subirlo.";
+    write(KEYS.invoices, list);
+    logActivity("factura", "Comprobante de " + list[i].number + " (" + list[i].companyName + ") rechazado: " + list[i].receiptNote);
+    return list[i];
+  }
+  /* El admin confirma el pago → "pagada" y se recarga la pauta (paso 4) */
   function markInvoicePaid(id) {
     const list = getInvoices();
     const i = list.findIndex(function (f) { return f.id === id; });
     if (i < 0 || list[i].status === "pagada") return null;
     list[i].status = "pagada";
     list[i].paidAt = now();
+    list[i].receiptNote = "";
     write(KEYS.invoices, list);
-    // Al pagar, se recarga la pauta de la empresa (paso 4 del proceso)
     const c = getCompany(list[i].companyId);
     if (c) updateCompany(c.id, { balance: (c.balance || 0) + list[i].amount });
     logActivity("factura", "Factura " + list[i].number + " pagada — saldo de " + list[i].companyName + " recargado con $" + list[i].amount.toFixed(2));
     return list[i];
+  }
+
+  /* ---------- Paso 5 — gasto del saldo por plataforma ---------- */
+  function getSpends(companyId) {
+    const all = read(KEYS.spends, []);
+    return companyId ? all.filter(function (s) { return s.companyId === companyId; }) : all;
+  }
+  function addSpend(companyId, platform, amount, campaign) {
+    const c = getCompany(companyId);
+    if (!c) return { error: "Empresa no encontrada." };
+    if (!PLATFORMS[platform]) return { error: "Plataforma no válida." };
+    amount = Number(amount) || 0;
+    if (amount <= 0) return { error: "El monto debe ser mayor a 0." };
+    if (amount > (c.balance || 0)) return { error: "Saldo insuficiente. Disponible: $" + (c.balance || 0).toFixed(2) + ". Solicita una recarga." };
+    const sp = { id: uid("sp"), companyId: c.id, companyName: c.company, platform: platform, amount: amount, campaign: (campaign || "").trim() || ("Campaña " + PLATFORMS[platform].name), createdAt: now() };
+    const all = read(KEYS.spends, []);
+    all.unshift(sp);
+    write(KEYS.spends, all);
+    updateCompany(c.id, { balance: (c.balance || 0) - amount });
+    logActivity("pauta", c.company + " asignó $" + amount.toFixed(2) + " a " + PLATFORMS[platform].name + " (" + sp.campaign + ")");
+    return sp;
+  }
+  function spendByPlatform(companyId) {
+    const out = {};
+    Object.keys(PLATFORMS).forEach(function (k) { out[k] = 0; });
+    getSpends(companyId).forEach(function (s) { out[s.platform] = (out[s.platform] || 0) + s.amount; });
+    return out;
   }
   function requestRecharge(companyId, amount) {
     const c = getCompany(companyId);
@@ -242,7 +307,7 @@ window.ANDStore = (function () {
     write(KEYS.admins, [{ id: "adm_root", name: "Administrador AND", email: "admin@and.com", password: "admin123", createdAt: daysAgo(30) }]);
 
     const companies = [
-      { id: "emp_1", company: "Yaku Pura", email: "finanzas@yakupura.com", ruc: "1791234567001", phone: "+593 99 111 2233", city: "Quito", password: "empresa123", status: "aprobada", balance: 3200, createdAt: daysAgo(21) },
+      { id: "emp_1", company: "Yaku Pura", email: "finanzas@yakupura.com", ruc: "1791234567001", phone: "+593 99 111 2233", city: "Quito", password: "empresa123", status: "aprobada", balance: 1200, createdAt: daysAgo(21) },
       { id: "emp_2", company: "Codex Digital", email: "admin@codex.ec", ruc: "0992345678001", phone: "+593 98 222 3344", city: "Guayaquil", password: "empresa123", status: "aprobada", balance: 850, createdAt: daysAgo(18) },
       { id: "emp_3", company: "HAE Group", email: "contacto@hae.com.ec", ruc: "0193456789001", phone: "+593 97 333 4455", city: "Cuenca", password: "empresa123", status: "aprobada", balance: 0, createdAt: daysAgo(12) },
       { id: "emp_4", company: "Nova Retail S.A.", email: "gerencia@novaretail.ec", ruc: "1794567890001", phone: "+593 96 444 5566", city: "Quito", password: "empresa123", status: "pendiente", balance: 0, createdAt: daysAgo(2) },
@@ -271,8 +336,14 @@ window.ANDStore = (function () {
 
     function inv(n, cid, cname, amount, status, d) {
       const isd = amount * s.isd, fee = amount * s.fee, iva = (amount + isd + fee) * s.iva;
-      return { id: "fac_" + n, number: "001-001-" + String(n).padStart(9, "0"), companyId: cid, companyName: cname, amount: amount, isd: isd, fee: fee, iva: iva, total: amount + isd + fee + iva, status: status, createdAt: daysAgo(d), paidAt: status === "pagada" ? daysAgo(d - 1) : null };
+      return { id: "fac_" + n, number: "001-001-" + String(n).padStart(9, "0"), companyId: cid, companyName: cname, amount: amount, isd: isd, fee: fee, iva: iva, total: amount + isd + fee + iva, status: status, createdAt: daysAgo(d), paidAt: status === "pagada" ? daysAgo(d - 1) : null, receipt: null, receiptNote: "" };
     }
+    write(KEYS.spends, [
+      { id: "sp_1", companyId: "emp_1", companyName: "Yaku Pura", platform: "meta", amount: 1200, campaign: "Lanzamiento verano", createdAt: daysAgo(12) },
+      { id: "sp_2", companyId: "emp_1", companyName: "Yaku Pura", platform: "google", amount: 600, campaign: "Búsqueda marca", createdAt: daysAgo(10) },
+      { id: "sp_3", companyId: "emp_1", companyName: "Yaku Pura", platform: "tiktok", amount: 200, campaign: "Reels producto", createdAt: daysAgo(5) },
+      { id: "sp_4", companyId: "emp_2", companyName: "Codex Digital", platform: "google", amount: 500, campaign: "Leads B2B", createdAt: daysAgo(15) }
+    ]);
     write(KEYS.invoices, [
       inv(6, "emp_2", "Codex Digital", 850, "pagada", 3),
       inv(5, "emp_3", "HAE Group", 1500, "pendiente", 4),
@@ -301,7 +372,9 @@ window.ANDStore = (function () {
     getSettings: getSettings, saveSettings: saveSettings,
     getLeads: getLeads, addLead: addLead, updateLead: updateLead, deleteLead: deleteLead,
     getCompanies: getCompanies, getCompany: getCompany, addCompany: addCompany, updateCompany: updateCompany, findCompanyByEmail: findCompanyByEmail,
-    getInvoices: getInvoices, createInvoice: createInvoice, markInvoicePaid: markInvoicePaid, requestRecharge: requestRecharge,
+    getInvoices: getInvoices, getInvoice: getInvoice, createInvoice: createInvoice, markInvoicePaid: markInvoicePaid, requestRecharge: requestRecharge,
+    uploadReceipt: uploadReceipt, rejectReceipt: rejectReceipt,
+    PLATFORMS: PLATFORMS, getSpends: getSpends, addSpend: addSpend, spendByPlatform: spendByPlatform,
     getAdmins: getAdmins, addAdmin: addAdmin, removeAdmin: removeAdmin,
     login: login, logout: logout, getSession: getSession,
     getActivity: getActivity, logActivity: logActivity,

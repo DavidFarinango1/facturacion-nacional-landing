@@ -54,15 +54,16 @@
   const STATUS = {
     lead: { nuevo: ["info", "Nuevo"], contactado: ["warn", "Contactado"], convertido: ["ok", "Convertido"] },
     company: { pendiente: ["warn", "Pendiente"], aprobada: ["ok", "Aprobada"], rechazada: ["bad", "Rechazada"], suspendida: ["neutral", "Suspendida"] },
-    invoice: { pendiente: ["warn", "Pendiente de pago"], pagada: ["ok", "Pagada"] }
+    invoice: { pendiente: ["warn", "Pendiente de pago"], en_revision: ["info", "Comprobante en revisión"], pagada: ["ok", "Pagada"] }
   };
+  const P = S.PLATFORMS;
   function pill(kind, status) { const m = STATUS[kind][status] || ["neutral", status]; return '<span class="pill pill--' + m[0] + '">' + m[1] + "</span>"; }
 
   /* ---------- Badges del menú ---------- */
   function refreshBadges() {
     const nl = S.getLeads().filter(function (l) { return l.status === "nuevo"; }).length;
     const nc = S.getCompanies().filter(function (c) { return c.status === "pendiente"; }).length;
-    const ni = S.getInvoices().filter(function (f) { return f.status === "pendiente"; }).length;
+    const ni = S.getInvoices().filter(function (f) { return f.status === "en_revision"; }).length; // comprobantes por revisar
     document.querySelector('[data-badge="leads"]').textContent = nl || "";
     document.querySelector('[data-badge="companies"]').textContent = nc || "";
     document.querySelector('[data-badge="invoices"]').textContent = ni || "";
@@ -207,16 +208,21 @@
     const approved = S.getCompanies().filter(function (c) { return c.status === "aprobada"; });
     const opts = approved.map(function (c) { return '<option value="' + c.id + '">' + esc(c.company) + '</option>'; }).join("");
     const rows = invs.map(function (f) {
-      return '<tr><td><strong>' + esc(f.number) + '</strong><div class="muted">' + fdate(f.createdAt) + '</div></td><td>' + esc(f.companyName) + '</td><td class="num">' + fmt(f.amount) + '</td><td class="num muted">' + fmt(f.isd) + '</td><td class="num muted">' + fmt(f.fee) + '</td><td class="num muted">' + fmt(f.iva) + '</td><td class="num"><strong>' + fmt(f.total) + '</strong></td><td>' + pill("invoice", f.status) + (f.paidAt ? '<div class="muted">' + fdate(f.paidAt) + '</div>' : '') + '</td><td class="actions">' + (f.status === "pendiente" ? '<button class="pbtn pbtn--sm pbtn--ok" data-pay="' + f.id + '">Marcar pagada</button>' : '<span class="muted">Saldo acreditado</span>') + '</td></tr>';
+      let actions = '<a class="pbtn pbtn--sm" href="factura.html#' + f.id + '" target="_blank" rel="noopener">PDF</a>';
+      if (f.status === "en_revision") actions += '<button class="pbtn pbtn--sm pbtn--primary" data-receipt="' + f.id + '">Ver comprobante</button>';
+      else if (f.status === "pendiente") actions += '<button class="pbtn pbtn--sm pbtn--ok" data-pay="' + f.id + '">Marcar pagada</button>';
+      else actions += '<span class="muted">Saldo acreditado</span>';
+      return '<tr' + (f.status === "en_revision" ? ' class="row-hl"' : '') + '><td><strong>' + esc(f.number) + '</strong><div class="muted">' + fdate(f.createdAt) + '</div></td><td>' + esc(f.companyName) + '</td><td class="num">' + fmt(f.amount) + '</td><td class="num muted">' + fmt(f.isd) + '</td><td class="num muted">' + fmt(f.fee) + '</td><td class="num muted">' + fmt(f.iva) + '</td><td class="num"><strong>' + fmt(f.total) + '</strong></td><td>' + pill("invoice", f.status) + (f.paidAt ? '<div class="muted">' + fdate(f.paidAt) + '</div>' : '') + (f.receipt && f.receipt.reference ? '<div class="muted">Ref. ' + esc(f.receipt.reference) + '</div>' : '') + '</td><td class="actions">' + actions + '</td></tr>';
     }).join("");
     const total = invs.reduce(function (a, f) { return a + f.total; }, 0);
+    const reviewing = S.getInvoices().filter(function (f) { return f.status === "en_revision"; }).length;
     return '<section class="panel"><div class="panel__head"><div><h2>Emitir factura nacional</h2><p>Paso 2 del proceso: una única factura válida fiscalmente. Al marcarla pagada se recarga la pauta (paso 4).</p></div></div>\
 <form id="invoiceForm" class="pform pform--2">\
 <div class="pfield"><label>Empresa (solo aprobadas)</label><select class="pselect" id="invCompany" required>' + (opts || '<option value="">— No hay empresas aprobadas —</option>') + '</select></div>\
 <div class="pfield"><label>Monto de pauta ($)</label><input class="pinput" id="invAmount" type="number" min="1" step="1" placeholder="1000" required /><span class="hint">Se agregan ISD ' + (s.isd * 100).toFixed(1) + '%, comisión AND ' + (s.fee * 100).toFixed(1) + '% e IVA ' + (s.iva * 100).toFixed(1) + '% (crédito tributario).</span></div>\
 <div class="pform__actions" style="grid-column:1/-1"><button type="submit" class="pbtn pbtn--primary"' + (opts ? "" : " disabled") + '>Emitir factura</button><span id="invPreview" class="pmsg"></span></div></form></section>\
 <section class="panel"><div class="panel__head"><div><h2>' + invs.length + ' factura' + (invs.length === 1 ? "" : "s") + ' · ' + fmt(total) + '</h2></div>\
-<div class="filters"><select class="pselect" id="invStatus"><option value="">Todas</option><option value="pendiente"' + (invFilter.status === "pendiente" ? " selected" : "") + '>Pendientes</option><option value="pagada"' + (invFilter.status === "pagada" ? " selected" : "") + '>Pagadas</option></select></div></div>\
+<div class="filters">' + (reviewing ? '<span class="pill pill--info">' + reviewing + ' comprobante(s) por revisar</span>' : '') + '<select class="pselect" id="invStatus"><option value="">Todas</option><option value="en_revision"' + (invFilter.status === "en_revision" ? " selected" : "") + '>Comprobante en revisión</option><option value="pendiente"' + (invFilter.status === "pendiente" ? " selected" : "") + '>Pendientes</option><option value="pagada"' + (invFilter.status === "pagada" ? " selected" : "") + '>Pagadas</option></select></div></div>\
 ' + (rows ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>N.º</th><th>Empresa</th><th class="num">Pauta</th><th class="num">ISD</th><th class="num">Comisión</th><th class="num">IVA</th><th class="num">Total</th><th>Estado</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>' : '<p class="empty">No hay facturas.</p>') + '</section>';
   };
 
@@ -302,8 +308,14 @@
     view.querySelectorAll("[data-comp-detail]").forEach(function (b) { b.addEventListener("click", function () {
       const c = S.getCompany(b.dataset.compDetail); if (!c) return;
       const invs = S.getInvoices().filter(function (f) { return f.companyId === c.id; });
-      const invRows = invs.map(function (f) { return '<li style="display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid var(--panel-border)"><span>' + esc(f.number) + '</span><span>' + fmt(f.total) + ' ' + pill("invoice", f.status) + '</span></li>'; }).join("");
-      openDrawer(c.company, '<dl class="dl"><dt>Estado</dt><dd>' + pill("company", c.status) + '</dd><dt>RUC</dt><dd>' + esc(c.ruc) + '</dd><dt>Correo</dt><dd>' + esc(c.email) + '</dd><dt>Teléfono</dt><dd>' + esc(c.phone) + '</dd><dt>Ciudad</dt><dd>' + esc(c.city) + '</dd><dt>Saldo de pauta</dt><dd>' + fmt(c.balance) + '</dd><dt>Registro</dt><dd>' + fdatetime(c.createdAt) + '</dd></dl><h4 style="margin:1.25rem 0 .5rem;font-size:.85rem">Facturas (' + invs.length + ')</h4><ul style="list-style:none;padding:0;margin:0;font-size:.85rem">' + (invRows || '<li class="muted">Sin facturas.</li>') + '</ul>');
+      const invRows = invs.map(function (f) { return '<li style="display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid var(--panel-border)"><a href="factura.html#' + f.id + '" target="_blank" rel="noopener">' + esc(f.number) + '</a><span>' + fmt(f.total) + ' ' + pill("invoice", f.status) + '</span></li>'; }).join("");
+      const byPlat = S.spendByPlatform(c.id), spends = S.getSpends(c.id);
+      const spentTotal = spends.reduce(function (a, x) { return a + x.amount; }, 0);
+      const maxPlat = Math.max(1, Math.max.apply(null, Object.keys(byPlat).map(function (k) { return byPlat[k]; })));
+      const platBars = Object.keys(P).map(function (k) { const v = byPlat[k] || 0; return '<div class="plat"><div class="plat__head"><img src="' + P[k].logo + '" alt="" /><span>' + P[k].name + '</span><b>' + fmt(v) + '</b><em>' + (spentTotal ? Math.round(v / spentTotal * 100) : 0) + '%</em></div><div class="plat__track"><i style="width:' + Math.round(v / maxPlat * 100) + '%"></i></div></div>'; }).join("");
+      openDrawer(c.company, '<dl class="dl"><dt>Estado</dt><dd>' + pill("company", c.status) + '</dd><dt>RUC</dt><dd>' + esc(c.ruc) + '</dd><dt>Correo</dt><dd>' + esc(c.email) + '</dd><dt>Teléfono</dt><dd>' + esc(c.phone) + '</dd><dt>Ciudad</dt><dd>' + esc(c.city) + '</dd><dt>Saldo de pauta</dt><dd>' + fmt(c.balance) + '</dd><dt>Pauta asignada</dt><dd>' + fmt(spentTotal) + ' en ' + spends.length + ' campaña(s)</dd><dt>Registro</dt><dd>' + fdatetime(c.createdAt) + '</dd></dl>\
+<h4 style="margin:1.25rem 0 .5rem;font-size:.85rem">Gasto por plataforma</h4><div class="plats">' + platBars + '</div>\
+<h4 style="margin:1.25rem 0 .5rem;font-size:.85rem">Facturas (' + invs.length + ')</h4><ul style="list-style:none;padding:0;margin:0;font-size:.85rem">' + (invRows || '<li class="muted">Sin facturas.</li>') + '</ul>');
     }); });
 
     // Leads
@@ -342,6 +354,16 @@
     const is = document.getElementById("invStatus");
     if (is) is.addEventListener("change", function () { invFilter.status = is.value; rerender(); });
     view.querySelectorAll("[data-pay]").forEach(function (b) { b.addEventListener("click", function () { const f = S.markInvoicePaid(b.dataset.pay); if (f) toast("Pago registrado. Saldo de " + f.companyName + " recargado con " + fmt(f.amount) + "."); rerender(); }); });
+    // Revisión de comprobante (paso 3): confirmar → paso 4 (saldo) | rechazar → vuelve a pendiente
+    view.querySelectorAll("[data-receipt]").forEach(function (b) { b.addEventListener("click", function () {
+      const f = S.getInvoice(b.dataset.receipt); if (!f || !f.receipt) return;
+      const r = f.receipt;
+      const preview = r.type === "application/pdf" ? '<a class="pbtn" href="' + r.dataUrl + '" download="' + esc(r.name) + '">📄 Descargar PDF: ' + esc(r.name) + '</a>' : '<a href="' + r.dataUrl + '" target="_blank" rel="noopener"><img class="rc-img" src="' + r.dataUrl + '" alt="Comprobante de pago" /></a>';
+      openDrawer("Comprobante · " + f.number, '<dl class="dl"><dt>Empresa</dt><dd>' + esc(f.companyName) + '</dd><dt>Total a cobrar</dt><dd><strong>' + fmt(f.total) + '</strong></dd><dt>Recarga de pauta</dt><dd>' + fmt(f.amount) + '</dd><dt>Referencia</dt><dd>' + (r.reference ? esc(r.reference) : '<span class="muted">no indicada</span>') + '</dd><dt>Subido</dt><dd>' + fdatetime(r.uploadedAt) + '</dd></dl><div class="rc-preview" style="margin:1rem 0">' + preview + '</div>\
+<div class="pform__actions"><button class="pbtn pbtn--ok" id="rcConfirm">Confirmar pago y recargar ' + fmt(f.amount) + '</button><button class="pbtn pbtn--bad" id="rcReject">Rechazar comprobante</button></div><div class="pfield" style="margin-top:.75rem"><label>Motivo (si rechazas)</label><input class="pinput" id="rcNote" placeholder="Ej. El monto no coincide con la factura" /></div>');
+      document.getElementById("rcConfirm").addEventListener("click", function () { const p = S.markInvoicePaid(f.id); closeDrawer(); toast("Pago confirmado. Saldo de " + p.companyName + " recargado con " + fmt(p.amount) + "."); rerender(); });
+      document.getElementById("rcReject").addEventListener("click", function () { const note = document.getElementById("rcNote").value.trim(); if (!note) { document.getElementById("rcNote").focus(); toast("Indica el motivo del rechazo."); return; } S.rejectReceipt(f.id, note); closeDrawer(); toast("Comprobante rechazado. La empresa verá el motivo."); rerender(); });
+    }); });
 
     // Configuración
     const sf = document.getElementById("settingsForm");

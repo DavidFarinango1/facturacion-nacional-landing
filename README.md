@@ -18,7 +18,12 @@ Sitio estático (HTML/CSS/JS, sin frameworks) con:
 - **Registro Corporativo** (página o modal) → aparece en **Admin → Empresas** como *pendiente*; el admin la **aprueba** y recién entonces la empresa puede iniciar sesión.
 - **Admin → Configuración**: las tasas (ISD, IVA, comisión AND, no deducible) que usa la **calculadora de la landing** y la emisión de facturas. Cambia una y la landing se recalcula.
 - **Admin → Facturas**: emitir factura nacional a una empresa aprobada (paso 2). Al **marcarla pagada** (paso 3) se recarga el saldo de pauta de la empresa (paso 4).
-- **Panel empresa**: la empresa solicita una recarga → se genera la factura pendiente que el admin cobra.
+- **Panel empresa**, los 5 pasos con lógica real:
+  1. **Monto** — solicita una recarga → se emite la factura nacional (*pendiente*).
+  2. **Factura local** — botón **PDF** abre `factura.html` (imprimible / guardar como PDF).
+  3. **Pago** — **Subir comprobante** (JPG/PNG/PDF + n.º de referencia) → la factura pasa a *Comprobante en revisión*. El admin lo ve en **Facturas → Ver comprobante** y lo **confirma** o lo **rechaza con motivo** (la empresa ve el motivo y vuelve a subirlo).
+  4. **Pauta recargada** — al confirmar el pago, el saldo de la empresa sube por el monto de la pauta.
+  5. **A pautar** — **Asignar pauta a una plataforma** (Meta / Google / TikTok / X, con nombre de campaña) descuenta del saldo; el desglose "¿En qué se gastó el saldo?" se ve en el panel de la empresa y en **Admin → Empresas → Detalle**.
 - Toda acción queda en **Admin → Actividad**.
 
 ## Credenciales de demostración
