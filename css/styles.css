@@ -170,7 +170,7 @@ html.dark .theme-toggle .icon-sun { display: none; }
 
 /* ---------- Encabezados de sección ---------- */
 .section-head { text-align: center; margin-bottom: var(--fib-6); }
-.section-head--sm { margin-bottom: 6rem; position: relative; z-index: 10; }
+.section-head--sm { margin-bottom: 2.5rem; position: relative; z-index: 10; }
 .section-head__title { font-size: clamp(1.875rem, 5vw, 3.75rem); font-weight: 700; letter-spacing: -.025em; line-height: 1.1; }
 .section-head__title--sm { font-size: clamp(1.875rem, 3.5vw, 2.25rem); margin-bottom: 1rem; }
 .section-head__title--xl { font-size: clamp(2.25rem, 6vw, 4.5rem); }
@@ -225,7 +225,7 @@ html.dark .platforms__label { color: var(--slate-500); opacity: 1; }
 /* =====================================================================
    EMPRESAS (calculadora + proceso)
    ===================================================================== */
-.companies { position: relative; padding-top: 8rem; padding-bottom: var(--fib-6); overflow: hidden; }
+.companies { position: relative; padding-top: 5rem; padding-bottom: var(--fib-4); overflow: hidden; }
 .companies__texture { position: absolute; inset: 0; opacity: .2; pointer-events: none; }
 .companies__texture img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.25); }
 .companies__fade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, var(--background), transparent 30%, transparent 70%, var(--background)); }
@@ -233,7 +233,7 @@ html.dark .companies__fade { background: linear-gradient(to bottom, #000, transp
 .companies__inner { position: relative; z-index: 10; }
 
 /* ---------- Calculadora ---------- */
-.calc-wrap { max-width: 64rem; margin: 0 auto 8rem; padding-inline: 1rem; }
+.calc-wrap { max-width: 64rem; margin: 0 auto 4.5rem; padding-inline: 1rem; }
 .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 1.5rem; backdrop-filter: blur(24px); box-shadow: 0 25px 50px -12px rgba(0,0,0,.25); }
 .calc { padding: 2rem; }
 .calc__head { text-align: center; margin-bottom: 2.5rem; }
@@ -357,9 +357,9 @@ html.dark .consent { color: var(--slate-400); }
 .lead__status.is-error { color: var(--red-500); }
 
 /* ---------- Proceso / timeline ---------- */
-.process { max-width: 64rem; margin: 0 auto var(--fib-6); position: relative; }
-.timeline { position: relative; display: flex; flex-direction: column; gap: 6rem; }
-.timeline__line { position: absolute; left: 50%; top: -2rem; bottom: 2rem; width: 2px; transform: translateX(-50%); background: var(--timeline); display: none; }
+.process { max-width: 64rem; margin: 0 auto var(--fib-4); position: relative; }
+.timeline { position: relative; display: flex; flex-direction: column; gap: 2.5rem; }
+.timeline__line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; transform: translateX(-50%); background: var(--timeline); display: none; }
 @media (min-width: 768px) { .timeline__line { display: block; } }
 .step { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2rem; }
 @media (min-width: 768px) { .step { flex-direction: row; gap: 4rem; } .step--reverse { flex-direction: row-reverse; } }
@@ -376,7 +376,7 @@ html.dark .step__badge { background: rgba(250,204,21,.12); color: var(--yellow-4
 html.dark .step__text p { color: var(--slate-300); opacity: 1; }
 
 /* Ilustraciones (mocks) de cada paso */
-.mock { position: relative; height: 20rem; border-radius: 1.5rem; padding: .5rem; border: 1px solid var(--step-card-border); background: var(--step-card-bg); box-shadow: 0 25px 50px -12px rgba(0,0,0,.25); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.mock { position: relative; height: 16rem; border-radius: 1.5rem; padding: .5rem; border: 1px solid var(--step-card-border); background: var(--step-card-bg); box-shadow: 0 25px 50px -12px rgba(0,0,0,.25); overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .mock::before { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom right, rgba(59,130,246,.05), rgba(59,130,246,.10)); z-index: 0; }
 html.dark .mock::before { background: linear-gradient(to bottom right, rgba(29,41,61,.5), rgba(15,23,43,.5)); }
 .mock > * { position: relative; z-index: 1; }
@@ -476,7 +476,7 @@ html.dark .mock__pill { background: rgba(30,58,138,.3); color: var(--emerald-400
 .mock__ping { position: absolute; inset: 0; border-radius: 9999px; background: var(--emerald-500); opacity: .2; animation: ping 1s cubic-bezier(0,0,.2,1) infinite; }
 .step.is-active .mock__fab { transform: scale(1); }
 
-.process__cta { text-align: center; margin-top: var(--fib-6); padding-inline: 1rem; }
+.process__cta { text-align: center; margin-top: var(--fib-4); padding-inline: 1rem; }
 @media (min-width: 640px) { .process__cta { padding-inline: 0; } }
 .process__cta .btn { width: 100%; }
 @media (min-width: 640px) { .process__cta .btn { width: auto; } }
