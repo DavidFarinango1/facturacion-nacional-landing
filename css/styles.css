@@ -163,7 +163,7 @@ html.dark .theme-toggle .icon-sun { display: none; }
 .blob { position: absolute; border-radius: 9999px; filter: blur(90px); opacity: .55; }
 .blob--blue { width: 520px; height: 520px; top: -160px; right: -120px; background: #3b82f6; }
 .blob--yellow { width: 380px; height: 380px; bottom: -160px; left: -120px; background: #facc15; opacity: .35; }
-.hero__logo { position: absolute; top: 1.5rem; left: 1.5rem; z-index: 5; display: block; border-radius: 1rem; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,.12); box-shadow: var(--shadow); transition: transform .2s; }
+.hero__logo { position: absolute; top: 1.25rem; left: 1.5rem; z-index: 5; display: block; transition: transform .2s; }
 .hero__logo:hover { transform: translateY(-2px); }
 .hero__logo img { height: 92px; width: auto; display: block; }
 @media (min-width: 900px) { .hero__logo { top: 2rem; left: 2.5rem; } .hero__logo img { height: 110px; } .hero { padding-top: 11rem; } }
