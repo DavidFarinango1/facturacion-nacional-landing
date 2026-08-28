@@ -286,20 +286,7 @@
   /* ------------------------------------------------------------------
      6) Marquee de clientes (duplicar grupo para loop infinito)
      ------------------------------------------------------------------ */
-  const track = document.getElementById("clientTrack");
-  const group = track.querySelector(".marquee__group");
-  track.appendChild(group.cloneNode(true));
-
-  // Cada tarjeta se pinta de azul al asomar por el borde derecho y sigue azul mientras recorre el carrusel
-  const marqueeEl = track.closest(".marquee");
-  const litObserver = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      const el = entry.target;
-      // Se pinta al entrar y se mantiene pintada mientras se mueve; se apaga al salir del carrusel
-      el.classList.toggle("is-lit", entry.isIntersecting);
-    });
-  }, { root: marqueeEl, threshold: 0.5 });
-  track.querySelectorAll(".client").forEach(function (el) { litObserver.observe(el); });
+  // (sección de clientes eliminada)
 })();
 
 /* =====================================================================
