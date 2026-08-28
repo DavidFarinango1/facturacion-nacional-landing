@@ -405,8 +405,10 @@ html.dark .row--accent > span { color: var(--accent); }
 .marquee__group { display: flex; align-items: center; gap: 1rem; padding-right: 1rem; }
 .client { flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: 5rem; width: 10rem; border-radius: 1rem; border: 1px solid var(--border); background: var(--card-bg); transition: all .3s; }
 .client:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: var(--shadow); }
-.client.is-lit { background: var(--primary); border-color: var(--primary); box-shadow: 0 14px 30px -12px rgba(37,99,235,.7); }
-.client.is-lit img { opacity: 1; filter: brightness(0) invert(1) !important; }
+.client.is-lit { background: #e4edff; border-color: #a8c5ff; box-shadow: 0 10px 24px -14px rgba(37,99,235,.35); }
+.client.is-lit img { opacity: .9; }
+html.dark .client.is-lit { background: rgba(59,130,246,.22); border-color: rgba(96,165,250,.45); box-shadow: 0 10px 24px -14px rgba(59,130,246,.5); }
+html.dark .client.is-lit img { filter: none; opacity: .95; }
 .client img { height: 2.75rem; width: auto; max-width: 80%; object-fit: contain; opacity: .55; transition: opacity .3s; user-select: none; }
 .client:hover img { opacity: 1; }
 html:not(.dark) .client img { filter: brightness(0); }
