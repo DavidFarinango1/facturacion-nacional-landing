@@ -289,6 +289,21 @@
   const track = document.getElementById("clientTrack");
   const group = track.querySelector(".marquee__group");
   track.appendChild(group.cloneNode(true));
+
+  // Cada tarjeta se pinta de azul al asomar por el borde derecho y vuelve a su color unos segundos después
+  const marqueeEl = track.closest(".marquee");
+  const litTimers = new WeakMap();
+  const litObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      const el = entry.target;
+      if (entry.isIntersecting) {
+        el.classList.add("is-lit");
+        clearTimeout(litTimers.get(el));
+        litTimers.set(el, setTimeout(function () { el.classList.remove("is-lit"); }, 2600));
+      }
+    });
+  }, { root: marqueeEl, threshold: 0.9 });
+  track.querySelectorAll(".client").forEach(function (el) { litObserver.observe(el); });
 })();
 
 /* =====================================================================
