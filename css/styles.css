@@ -479,6 +479,9 @@ html.dark .register__terms a { color: var(--accent); }
 .register__form .btn--block:disabled { background: var(--surface-2); color: var(--text-soft); border-color: var(--border); opacity: 1; box-shadow: none; }
 .register__status { text-align: center; font-size: .875rem; font-weight: 700; color: #16a34a; min-height: 1.25rem; }
 .register__status.is-error { color: var(--bad); }
+.register__icon--wa { background: #25d366; box-shadow: 0 10px 15px -3px rgba(37,211,102,.35); }
+.btn--wa { background: #25d366; color: #fff; box-shadow: 0 10px 24px -10px rgba(37,211,102,.8); }
+.btn--wa:hover { background: #1ebe5b; }
 
 /* =====================================================================
    AUTENTICACIÓN — login.html / registro.html

@@ -274,6 +274,90 @@
 })();
 
 /* =====================================================================
+   8) Modal "Quiero empezar" — datos de la empresa (sin contraseña) →
+      se guarda como lead en el panel y abre WhatsApp con el mensaje listo
+   ===================================================================== */
+(function () {
+  "use strict";
+  const WHATSAPP_NUMBER = "593999078539"; // 0999078539 (Ecuador) en formato internacional
+
+  const modal = document.getElementById("startModal");
+  const form = document.getElementById("startForm");
+  if (!modal || !form) return;
+  const submitBtn = document.getElementById("startSubmit");
+  const status = document.getElementById("startStatus");
+  const terms = document.getElementById("sTerms");
+  const fields = ["sCompany", "sEmail", "sRuc", "sPhone", "sCity"].map(function (id) { return document.getElementById(id); });
+  let lastFocus = null;
+
+  function openModal() {
+    lastFocus = document.activeElement;
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    setTimeout(function () { fields[0].focus(); }, 50);
+  }
+  function closeModal() {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  document.querySelectorAll("[data-open-start]").forEach(function (b) { b.addEventListener("click", openModal); });
+  document.querySelectorAll("[data-close-start]").forEach(function (b) { b.addEventListener("click", closeModal); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && modal.classList.contains("is-open")) closeModal(); });
+  document.getElementById("sRuc").addEventListener("input", function (e) { e.target.value = e.target.value.replace(/\D/g, ""); });
+
+  function validate() {
+    const filled = fields.every(function (f) { return f.value.trim() !== ""; });
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById("sEmail").value.trim());
+    submitBtn.disabled = !(filled && emailOk && terms.checked);
+  }
+  fields.forEach(function (f) { f.addEventListener("input", validate); });
+  terms.addEventListener("change", validate);
+  validate();
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (submitBtn.disabled) return;
+
+    const budgetEl = document.getElementById("investInput");
+    const budget = budgetEl ? Math.round(parseFloat(budgetEl.value) || 0) : 0;
+    const data = {
+      company: document.getElementById("sCompany").value.trim(),
+      email: document.getElementById("sEmail").value.trim(),
+      ruc: document.getElementById("sRuc").value.trim(),
+      phone: document.getElementById("sPhone").value.trim(),
+      city: document.getElementById("sCity").value.trim()
+    };
+
+    // Queda registrado como lead en el panel administrador
+    if (window.ANDStore) {
+      window.ANDStore.addLead({ fullName: "Contacto " + data.company, companyName: data.company, email: data.email, phone: data.phone, monthlyBudget: budget });
+      window.ANDStore.updateLead(window.ANDStore.getLeads()[0].id, { notes: "Origen: botón \"Quiero empezar\" (WhatsApp). RUC " + data.ruc + " · " + data.city });
+    }
+
+    const msg = [
+      "Hola AND, quiero empezar a facturar localmente mi pauta digital.",
+      "",
+      "Empresa: " + data.company,
+      "RUC: " + data.ruc,
+      "Correo: " + data.email,
+      "Teléfono: " + data.phone,
+      "Ciudad: " + data.city,
+      budget ? "Pauta mensual estimada: $" + budget.toLocaleString("en-US") : ""
+    ].filter(function (l, i) { return l !== "" || i === 1; }).join("\n");
+    const url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg);
+
+    status.classList.remove("is-error");
+    status.textContent = "¡Gracias! Abriendo WhatsApp…";
+    const win = window.open(url, "_blank");
+    if (win) { try { win.opener = null; } catch (_) {} } else { window.location.href = url; } // si el navegador bloquea la pestaña nueva
+    setTimeout(function () { form.reset(); validate(); status.textContent = ""; closeModal(); }, 1500);
+  });
+})();
+
+/* =====================================================================
    7) Modal "Registro Corporativo" — se abre desde "Optimizar mi gestión"
    ===================================================================== */
 (function () {
