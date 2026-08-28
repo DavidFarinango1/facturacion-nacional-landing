@@ -42,6 +42,16 @@ En **Admin → Configuración → "Reiniciar datos de demo"** se restauran los d
 
 Los datos viven en el navegador (`localStorage`), no en un servidor: sirven para demostrar el flujo completo, pero no se comparten entre dispositivos ni personas. Para producción real hay que conectar `js/store.js` a un backend (cada función tiene marcado su "Punto de integración") y nunca guardar contraseñas en claro.
 
+## Producción
+
+| Plataforma | URL |
+|---|---|
+| GitHub Pages | https://davidfarinango1.github.io/facturacion-nacional-landing/ |
+| Firebase Hosting | https://envyx-facturacion-nacional.web.app |
+
+- GitHub Pages se republica solo con cada `git push` a `main`.
+- Firebase: `firebase deploy --only hosting` desde esta carpeta (proyecto `envyx-facturacion-nacional`, configurado en `.firebaserc` / `firebase.json`).
+
 ## Ejecutar
 
 Abrir `index.html` directamente, o servir la carpeta: `npx serve -l 4173 .`
