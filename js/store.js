@@ -130,7 +130,7 @@ window.ANDStore = (function () {
     const companies = getCompanies();
     const c = {
       id: uid("emp"),
-      company: data.company, email: data.email.trim(), ruc: data.ruc, phone: data.phone, city: data.city,
+      company: data.company, contact: (data.contact || "").trim(), email: data.email.trim(), ruc: data.ruc, phone: data.phone, city: data.city,
       password: data.password, // Punto de integración: nunca guardar en claro en producción
       status: "pendiente", balance: 0, createdAt: now()
     };

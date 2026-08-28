@@ -287,7 +287,7 @@
   const submitBtn = document.getElementById("startSubmit");
   const status = document.getElementById("startStatus");
   const terms = document.getElementById("sTerms");
-  const fields = ["sCompany", "sEmail", "sRuc", "sPhone", "sCity"].map(function (id) { return document.getElementById(id); });
+  const fields = ["sName", "sCompany", "sEmail", "sRuc", "sPhone", "sCity"].map(function (id) { return document.getElementById(id); });
   let lastFocus = null;
 
   function openModal() {
@@ -324,6 +324,7 @@
     const budgetEl = document.getElementById("investInput");
     const budget = budgetEl ? Math.round(parseFloat(budgetEl.value) || 0) : 0;
     const data = {
+      name: document.getElementById("sName").value.trim(),
       company: document.getElementById("sCompany").value.trim(),
       email: document.getElementById("sEmail").value.trim(),
       ruc: document.getElementById("sRuc").value.trim(),
@@ -333,13 +334,14 @@
 
     // Queda registrado como lead en el panel administrador
     if (window.ANDStore) {
-      window.ANDStore.addLead({ fullName: "Contacto " + data.company, companyName: data.company, email: data.email, phone: data.phone, monthlyBudget: budget });
+      window.ANDStore.addLead({ fullName: data.name, companyName: data.company, email: data.email, phone: data.phone, monthlyBudget: budget });
       window.ANDStore.updateLead(window.ANDStore.getLeads()[0].id, { notes: "Origen: botón \"Quiero empezar\" (WhatsApp). RUC " + data.ruc + " · " + data.city });
     }
 
     const msg = [
       "Hola AND, quiero empezar a facturar localmente mi pauta digital.",
       "",
+      "Nombre: " + data.name,
       "Empresa: " + data.company,
       "RUC: " + data.ruc,
       "Correo: " + data.email,
@@ -371,7 +373,7 @@
   const terms = document.getElementById("rTerms");
   const pass = document.getElementById("rPass");
   const pass2 = document.getElementById("rPass2");
-  const fields = ["rCompany", "rEmail", "rRuc", "rPhone", "rCity", "rPass", "rPass2"].map(function (id) { return document.getElementById(id); });
+  const fields = ["rName", "rCompany", "rEmail", "rRuc", "rPhone", "rCity", "rPass", "rPass2"].map(function (id) { return document.getElementById(id); });
   let lastFocus = null;
 
   function openModal() {
@@ -424,6 +426,7 @@
     if (submitBtn.disabled) return;
 
     const data = {
+      contact: document.getElementById("rName").value.trim(),
       company: document.getElementById("rCompany").value.trim(),
       email: document.getElementById("rEmail").value.trim(),
       ruc: document.getElementById("rRuc").value.trim(),

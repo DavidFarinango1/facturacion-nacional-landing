@@ -137,7 +137,7 @@
     const terms = document.getElementById("rTerms");
     const pass = document.getElementById("rPass");
     const pass2 = document.getElementById("rPass2");
-    const fields = ["rCompany", "rEmail", "rRuc", "rPhone", "rCity", "rPass", "rPass2"].map(function (id) { return document.getElementById(id); });
+    const fields = ["rName", "rCompany", "rEmail", "rRuc", "rPhone", "rCity", "rPass", "rPass2"].map(function (id) { return document.getElementById(id); });
 
     document.getElementById("rRuc").addEventListener("input", function (e) {
       e.target.value = e.target.value.replace(/\D/g, "");
@@ -168,6 +168,7 @@
       if (submitBtn.disabled) return;
 
       const data = {
+        contact: document.getElementById("rName").value.trim(),
         company: document.getElementById("rCompany").value.trim(),
         email: document.getElementById("rEmail").value.trim(),
         ruc: document.getElementById("rRuc").value.trim(),
