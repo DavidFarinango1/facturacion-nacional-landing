@@ -189,16 +189,34 @@
     // Punto de integración: reemplazar por fetch() a tu backend / CRM.
     if (window.ANDStore) window.ANDStore.addLead(data);
 
+    // Mensaje de WhatsApp con los datos del formulario y el ahorro calculado
+    const r = compute(data.monthlyBudget);
+    const msg = [
+      "Hola ENVYX, quiero acceder a mi ahorro facturando localmente mi pauta digital.",
+      "",
+      "Nombre: " + data.fullName,
+      "Empresa: " + data.companyName,
+      "Correo: " + data.email,
+      "Teléfono: " + data.phone,
+      "Pauta mensual: $" + Math.round(data.monthlyBudget).toLocaleString("en-US"),
+      "Ahorro estimado: " + fmt(r.saveMonth) + "/mes · " + fmt(r.saveYear) + "/año"
+    ].join("\n");
+    const url = "https://wa.me/593999078539?text=" + encodeURIComponent(msg);
+
+    const submitHtml = submitBtn.innerHTML;
     submitBtn.disabled = true;
-    submitBtn.textContent = "Enviando…";
+    submitBtn.textContent = "Abriendo WhatsApp…";
+    const win = window.open(url, "_blank");
+    if (win) { try { win.opener = null; } catch (_) {} } else { window.location.href = url; } // si el navegador bloquea la pestaña nueva
+
     setTimeout(function () {
       status.classList.remove("is-error");
       status.textContent = "¡Listo! Te contactaremos pronto para activar tu ahorro.";
       form.reset();
-      submitBtn.innerHTML = "Quiero acceder a mi ahorro";
+      submitBtn.innerHTML = submitHtml;
       render(sanitize(investInput.value));
       validateForm();
-    }, 700);
+    }, 900);
   });
 
   /* ------------------------------------------------------------------
