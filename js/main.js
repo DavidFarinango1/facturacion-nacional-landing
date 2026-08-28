@@ -290,19 +290,15 @@
   const group = track.querySelector(".marquee__group");
   track.appendChild(group.cloneNode(true));
 
-  // Cada tarjeta se pinta de azul al asomar por el borde derecho y vuelve a su color unos segundos después
+  // Cada tarjeta se pinta de azul al asomar por el borde derecho y sigue azul mientras recorre el carrusel
   const marqueeEl = track.closest(".marquee");
-  const litTimers = new WeakMap();
   const litObserver = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       const el = entry.target;
-      if (entry.isIntersecting) {
-        el.classList.add("is-lit");
-        clearTimeout(litTimers.get(el));
-        litTimers.set(el, setTimeout(function () { el.classList.remove("is-lit"); }, 2600));
-      }
+      // Se pinta al entrar y se mantiene pintada mientras se mueve; se apaga al salir del carrusel
+      el.classList.toggle("is-lit", entry.isIntersecting);
     });
-  }, { root: marqueeEl, threshold: 0.9 });
+  }, { root: marqueeEl, threshold: 0.5 });
   track.querySelectorAll(".client").forEach(function (el) { litObserver.observe(el); });
 })();
 
