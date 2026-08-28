@@ -176,22 +176,22 @@ html.dark .hero__accent { background: linear-gradient(90deg, #93c5fd, #3b82f6); 
 .hero__facts span { font-size: .8rem; color: var(--text-soft); }
 
 /* Tarjeta flotante */
-.hero__visual { position: relative; max-width: 30rem; margin-inline: auto; }
-.hcard { position: relative; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 1.5rem; padding: 1.5rem; box-shadow: var(--shadow); }
+.hero__visual { position: relative; max-width: 27rem; margin-inline: auto; }
+.hcard { position: relative; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 1.5rem; padding: 1.15rem 1.25rem; box-shadow: var(--shadow); }
 .hcard::before { content: ""; position: absolute; inset: -1px; border-radius: 1.5rem; padding: 1px; background: linear-gradient(135deg, rgba(59,130,246,.6), transparent 40%, rgba(250,204,21,.6)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
 .hcard__head { display: flex; align-items: center; gap: .5rem; font-size: .78rem; font-weight: 600; color: var(--text-soft); }
 .hcard__dot { width: 8px; height: 8px; border-radius: 9999px; background: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,.2); }
 .hcard__tag { margin-left: auto; padding: .2rem .55rem; border-radius: 9999px; background: rgba(37,99,235,.12); color: var(--primary); font-size: .68rem; font-weight: 700; }
-.hcard__big { margin-top: .9rem; font-size: 2.6rem; font-weight: 800; letter-spacing: -.03em; display: flex; align-items: baseline; gap: .5rem; }
+.hcard__big { margin-top: .6rem; font-size: 2.2rem; font-weight: 800; letter-spacing: -.03em; display: flex; align-items: baseline; gap: .5rem; }
 .hcard__big small { font-family: var(--font-sans); font-size: .85rem; font-weight: 600; color: var(--text-soft); }
-.hcard__rows { margin-top: 1rem; display: grid; gap: .5rem; font-size: .9rem; }
-.hcard__rows div { display: flex; justify-content: space-between; padding: .5rem .75rem; border-radius: .6rem; background: var(--surface-2); }
+.hcard__rows { margin-top: .7rem; display: grid; gap: .35rem; font-size: .85rem; }
+.hcard__rows div { display: flex; justify-content: space-between; padding: .4rem .7rem; border-radius: .6rem; background: var(--surface-2); }
 .hcard__rows span { color: var(--text-soft); }
 .hcard__rows .is-bad { color: var(--bad); }
 .hcard__rows .is-good { color: var(--good); }
-.hcard__bar { margin-top: 1rem; height: 8px; border-radius: 4px; background: var(--range-track); overflow: hidden; }
+.hcard__bar { margin-top: .7rem; height: 8px; border-radius: 4px; background: var(--range-track); overflow: hidden; }
 .hcard__bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 4px; }
-.hcard__foot { margin-top: .75rem; font-size: .85rem; color: var(--text-soft); }
+.hcard__foot { margin-top: .5rem; font-size: .8rem; color: var(--text-soft); }
 .hcard__foot strong { color: var(--text-main); }
 .hfloat { position: absolute; display: inline-flex; align-items: center; gap: .4rem; padding: .55rem .85rem; border-radius: .8rem; background: var(--card-bg); border: 1px solid var(--card-border); box-shadow: var(--shadow); font-size: .8rem; font-weight: 700; animation: floatY 5s ease-in-out infinite; }
 .hfloat--a { top: -1rem; left: -1.5rem; color: #16a34a; }
