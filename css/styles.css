@@ -157,8 +157,8 @@ html.dark .theme-toggle .icon-sun { display: none; }
 /* =====================================================================
    HERO
    ===================================================================== */
-.hero { position: relative; padding: 4.5rem 0 4rem; overflow: hidden; }
-@media (min-width: 900px) { .hero { padding: 6rem 0 5rem; } }
+.hero { position: relative; padding: 3.5rem 0 2rem; overflow: hidden; }
+@media (min-width: 900px) { .hero { padding: 4.5rem 0 2.5rem; } }
 .hero__bg { position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(rgba(37,99,235,.14) 1px, transparent 1px); background-size: 26px 26px; mask-image: radial-gradient(ellipse at 50% 30%, #000 30%, transparent 75%); }
 .blob { position: absolute; border-radius: 9999px; filter: blur(90px); opacity: .55; }
 .blob--blue { width: 520px; height: 520px; top: -160px; right: -120px; background: #3b82f6; }
@@ -216,7 +216,7 @@ html:not(.dark) .chip img { filter: brightness(0); opacity: .8; }
 /* =====================================================================
    EMPRESAS · calculadora
    ===================================================================== */
-.companies { padding: 5rem 0 3rem; }
+.companies { padding: 2.5rem 0 3rem; }
 .calc { display: grid; gap: 1.5rem; margin-bottom: 4rem; }
 @media (min-width: 1000px) { .calc { grid-template-columns: 22rem 1fr; align-items: start; } }
 .calc__side { position: sticky; top: 90px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 1.5rem; padding: 1.5rem; box-shadow: var(--shadow); }
