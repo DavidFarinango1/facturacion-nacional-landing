@@ -80,7 +80,7 @@ html.dark {
 
 /* ---------- Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+html { scroll-behavior: smooth; scroll-padding-top: 1rem; }
 body { margin: 0; font-family: var(--font-sans); background: var(--background); color: var(--text-main); -webkit-font-smoothing: antialiased; transition: background-color .3s, color .3s; overflow-x: hidden; }
 img { max-width: 100%; display: block; }
 [hidden] { display: none !important; }
@@ -137,6 +137,8 @@ html.dark .btn--primary:hover { background: var(--emerald-400); color: #0b1020; 
 html.dark .theme-toggle .icon-moon { display: block; }
 html.dark .theme-toggle .icon-sun { display: none; }
 .topbar { position: fixed; top: 1rem; right: 1.25rem; z-index: 60; }
+.topbar--landing { top: 2rem; right: 2rem; }
+.topbar--landing .theme-toggle { width: 44px; height: 44px; border-radius: 9999px; box-shadow: var(--shadow); }
 
 /* ---------- Aparición ---------- */
 .reveal { opacity: 0; transition: opacity .7s ease, transform .7s ease; }
