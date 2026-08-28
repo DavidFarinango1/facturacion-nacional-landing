@@ -339,7 +339,7 @@
     }
 
     const msg = [
-      "Hola AND, quiero empezar a facturar localmente mi pauta digital.",
+      "Hola ENVYX, quiero empezar a facturar localmente mi pauta digital.",
       "",
       "Nombre: " + data.name,
       "Empresa: " + data.company,

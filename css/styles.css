@@ -554,3 +554,5 @@ html.dark .auth__foot a { color: var(--accent); }
   .hero .hero__logo { top: 7.25rem; }
   .hero .hero__title { font-size: 1.9rem; }
 }
+
+.footer__logo { height: 64px; width: auto; }
